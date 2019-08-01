@@ -50,6 +50,7 @@ $(function () {
  */
 function move(swiperDom) {
     let index = 0;
+    let timer = null;
     // 设置prev点击事件
     $(swiperDom).children(".prev").click(() => {
         index = index <= 0 ? $(swiperDom).children(".rel-ebb-swiper-item").length - 1 : --index;
@@ -71,8 +72,30 @@ function move(swiperDom) {
             changeItem(swiperDom, index);
         }
     });
+
+    // 设置动画
+    timer = setInterval(() => {
+        index = index >= $(swiperDom).children(".rel-ebb-swiper-item").length - 1 ? 0 : ++index;
+        changeItem(swiperDom, index);
+    }, 2000);
+    $(swiperDom).mouseover(() => {
+        // 鼠标移入，动画消失
+        clearInterval(timer);
+    });
+    $(swiperDom).mouseout(() => {
+        // 鼠标移出，动画恢复
+        timer = setInterval(() => {
+            index = index >= $(swiperDom).children(".rel-ebb-swiper-item").length - 1 ? 0 : ++index;
+            changeItem(swiperDom, index);
+        }, 2000);
+    });
 }
 
+/**
+ * 切换样式
+ * @param swiperDom
+ * @param index
+ */
 function changeItem(swiperDom, index) {
     // 显示对应的banner
     $(swiperDom).children(".rel-ebb-swiper-item").removeClass('active');
@@ -81,4 +104,5 @@ function changeItem(swiperDom, index) {
     $(swiperDom).find(".point").removeClass('active');
     $($(swiperDom).find(".point").get(index)).addClass('active');
 }
+
 
