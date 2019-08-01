@@ -1,0 +1,86 @@
+.rel-ebb-swiper
+  position relative
+  overflow hidden
+  width 100%
+  height 100%
+
+  &:hover
+    .prev
+      left 0
+
+    .next
+      right 0
+
+  .move
+    position absolute
+    top calc(50% - 15px)
+    background-color rgba(0, 0, 0, .3)
+    color #fff
+    line-height 24px
+    cursor pointer
+    transition all ease .5s
+    z-index 100
+
+    i
+      font-size 14px
+
+    &:hover
+      background-color rgba(0, 0, 0, .5)
+
+  .prev
+    left -24px
+    padding 3px 8px 3px 2px
+    border-radius 0 50% 50% 0
+
+  .next
+    padding 3px 2px 3px 8px
+    border-radius 50% 0 0 50%
+    right -24px
+
+    i
+      display block
+      transform rotate(180deg)
+
+  .point-list
+    display flex
+    justify-content space-around
+    align-items center
+    width 70px
+    height 14px
+    border-radius 22px
+    position absolute
+    bottom 10px
+    left calc(50% - 35px)
+    background-color rgba(255, 255, 255, .3)
+    z-index 100
+
+    .point
+      display block
+      cursor pointer
+      height 8px
+      width 8px
+      background-color #fff
+      border-radius 50%
+
+      &.active
+        background-color #f00
+
+  .rel-ebb-swiper-item
+    position absolute
+    opacity 0
+    height 100%
+    width 100%
+    overflow hidden
+
+    &.active
+      opacity 1
+
+    a
+      display block
+      height 100%
+      width 100%
+
+      img
+        width 100%
+        height 100%
+
