@@ -16,10 +16,15 @@
             height: 300px;
             width: 700px;
         }
+
+        .video {
+            width: 500px;
+            height: 300px;
+        }
     </style>
 </head>
 <body>
-<h1>Swiper</h1>
+<h1>swiper</h1>
 <mark>
     轮播图 <br>
     <b>swiper</b><br>
@@ -36,11 +41,56 @@
 </mark>
 <div class="swiper">
     <swiper point-panel autoplay point-panel-color="#abc" point-color="#f90" point-active-color="#000">
-        <swiper-item image="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2640752012,1534669165&fm=26&gp=0.jpg" link=""></swiper-item>
-        <swiper-item image="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=415008709,1894925421&fm=26&gp=0.jpg" link=""></swiper-item>
-        <swiper-item image="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2567630305,1627706587&fm=26&gp=0.jpg" link=""></swiper-item>
-        <swiper-item image="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1444965086,1221602315&fm=11&gp=0.jpg" link=""></swiper-item>
+        <swiper-item
+                image="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2640752012,1534669165&fm=26&gp=0.jpg"
+                link=""></swiper-item>
+        <swiper-item
+                image="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=415008709,1894925421&fm=26&gp=0.jpg"
+                link=""></swiper-item>
+        <swiper-item
+                image="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2567630305,1627706587&fm=26&gp=0.jpg"
+                link=""></swiper-item>
+        <swiper-item
+                image="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1444965086,1221602315&fm=11&gp=0.jpg"
+                link=""></swiper-item>
     </swiper>
+</div>
+
+<h1>Video</h1>
+<mark>
+    视频插件-注意V大写 <br>
+</mark>
+<div class="video">
+    <!--    <Video src=""></Video>-->
+    <div class="rel-ebb-video-box">
+        <video class="rel-ebb-video" src="https://www.w3school.com.cn/i/movie.ogg"></video>
+        <!-- 视频底部控件 -->
+        <div class="rel-ebb-controls">
+            <div class="left">
+                <div class="play">
+                    <span></span>
+                </div>
+                <div class="time-broadcast">00:00 / 56:37</div>
+            </div>
+            <div class="right">
+                <div class="voice">
+                    <i class="iconfont icon-prev"></i>
+                </div>
+                <div class="definition">
+                    1080P
+                </div>
+                <div class="speed">
+                    1.5x
+                </div>
+                <div class="full-screen">
+                    <i class="iconfont icon-prev"></i>
+                </div>
+                <div class="web-full-screen">
+                    <i class="iconfont icon-prev"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
