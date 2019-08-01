@@ -31,18 +31,43 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    "style-loader",
-                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            plugins: [
+                                require("autoprefixer")
+                            ]
+                        },
+                    },
+                    {
+                        loader: "css-loader"
+                    },
+                ],
+            },
+            {
+                test: /\.styl$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    {
+                        loader: "css-loader"
+                    },
                     {
                         loader: "stylus-loader",
                         options: {
                             modules: true
                         }
                     },
-                    {
-                        loader: "postcss-loader"
-                    },
-                    "css-loader",
                 ],
             },
             //暴露$和jQuery到全局
@@ -65,7 +90,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "css/rel-ebb.css"
         }),
-        // new CleanWebpackPlugin(),
     ],
     optimization: {
         minimizer: [
