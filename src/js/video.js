@@ -73,12 +73,12 @@ $(function () {
                                 <div class="speed-item" title="播放速度">1.0x</div>
                                 <ul class="speed-list">
                                     <div class="color">
-                                        <li data-speed="0">2.0倍速
+                                        <li data-speed="2.0">2.0倍速
                                             <div class="logo"></div>
                                         </li>
-                                        <li data-speed="1">1.5倍速</li>
-                                        <li data-speed="2">1.0倍速</li>
-                                        <li data-speed="3">0.5倍速</li>
+                                        <li data-speed="1.5">1.5倍速</li>
+                                        <li data-speed="1.0">1.0倍速</li>
+                                        <li data-speed="0.5">0.5倍速</li>
                                     </div>
                                     <li class="connect"></li>
                                 </ul>
@@ -148,6 +148,10 @@ $(function () {
             playEvent(videoBoxDom, videoDom);
             // 循环视频
             cycle(videoBoxDom);
+            // 修改视频速度
+            changeSpeed(videoBoxDom);
+            // 全屏
+            fullScreen(videoBoxDom);
         });
     }
 });
@@ -220,5 +224,32 @@ function cycle(videoBoxDom) {
         }
         videoCycle = !videoCycle;
     });
+}
+
+
+/**
+ * 修改视频速度
+ * @param videoBoxDom
+ */
+function changeSpeed(videoBoxDom) {
+    $(videoBoxDom).find('.speed-list').click(e => {
+        let currentDom = e.target;
+        if (currentDom.localName === 'li') {
+            // 获取当前点击的速度
+            let speed = $(currentDom).data('speed');
+            $(videoBoxDom).find('video').get(0).playbackRate = speed;
+            // 修改底部显示的文字
+            $(videoBoxDom).find('.speed-item').html(speed + 'x');
+        }
+    });
+}
+
+
+/**
+ * 全屏
+ * @param videoBoxDom
+ */
+function fullScreen(videoBoxDom) {
+
 }
 
