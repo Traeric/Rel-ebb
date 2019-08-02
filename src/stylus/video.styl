@@ -44,12 +44,69 @@
     width 240px
 
     .voice
+      position relative
+      font-size 12px
+
+      &:hover
+        .voice-panel
+          display block
+
       .img
         width 25px
         height 25px
         background-size cover
         background-image url("../../assets/images/voice.png")
         cursor pointer
+
+      .voice-panel
+        position absolute
+        bottom 12px
+        left -10px
+        width 35px
+        display none
+
+        .color
+          padding 5px 0
+          background-color rgba(0, 0, 0, .7)
+          border-radius 4px
+          width 100%
+          height 100%
+          display flex
+          justify-content space-between
+          align-items center
+          flex-direction column
+
+          .number
+            padding-bottom 10px
+
+          .show
+            .total
+              width 3px
+              height 100px
+              border-radius 50px
+              position relative
+
+            .btn
+              position absolute
+              top 24px
+              left -4.5px
+              cursor pointer
+              height 12px
+              width 12px
+              background-size contain
+              background-image url("../../assets/images/voice_btn.png")
+
+            .rest
+              background-color #fff
+              height 30px
+
+            .seted
+              background-color #fb7299
+              height 70px
+
+        .connect
+          height 26px
+          cursor pointer
 
     .cycle
       .img
