@@ -52,19 +52,19 @@ $(function () {
                                 </div>
                             </div>
                             <div class="cycle">
-                                <div class="img" title="循环"></div>
+                                <div class="img cycle-none" title="循环"></div>
                             </div>
                             <div class="definition">
                                 <div class="definition-item" title="清晰度">360P</div>
                                 <ul class="definition-list">
                                     <div class="color">
-                                        <li>超清 1080P
+                                        <li data-definition="0">超清 1080P
                                             <div class="logo"></div>
                                         </li>
-                                        <li>高清 720P</li>
-                                        <li>清晰 480P</li>
-                                        <li>流畅 360P</li>
-                                        <li>自动</li>
+                                        <li data-definition="1">高清 720P</li>
+                                        <li data-definition="2">清晰 480P</li>
+                                        <li data-definition="3">流畅 360P</li>
+                                        <li data-definition="4">自动</li>
                                     </div>
                                     <li class="connect"></li>
                                 </ul>
@@ -73,12 +73,12 @@ $(function () {
                                 <div class="speed-item" title="播放速度">1.0x</div>
                                 <ul class="speed-list">
                                     <div class="color">
-                                        <li>2.0倍速
+                                        <li data-speed="0">2.0倍速
                                             <div class="logo"></div>
                                         </li>
-                                        <li>1.5倍速</li>
-                                        <li>1.0倍速</li>
-                                        <li>0.5倍速</li>
+                                        <li data-speed="1">1.5倍速</li>
+                                        <li data-speed="2">1.0倍速</li>
+                                        <li data-speed="3">0.5倍速</li>
                                     </div>
                                     <li class="connect"></li>
                                 </ul>
@@ -146,6 +146,8 @@ $(function () {
 
             // 播放暂停视频
             playEvent(videoBoxDom, videoDom);
+            // 循环视频
+            cycle(videoBoxDom);
         });
     }
 });
@@ -199,4 +201,24 @@ function voiceBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.voice-panel .number').html(percent);
 }
 
+
+/**
+ * 循环播放
+ * @param videoBoxDom
+ */
+function cycle(videoBoxDom) {
+    let videoCycle = true;
+    $(videoBoxDom).find('.cycle .img').click(function () {
+        if (videoCycle) {
+            // 循环
+            $(videoBoxDom).find('video').attr('loop', 'loop');
+            $(this).removeClass('cycle-none').addClass('cycle').attr('title', '关闭循环');
+        } else {
+            // 不循环
+            $(videoBoxDom).find('video').removeAttr('loop');
+            $(this).removeClass('cycle').addClass('cycle-none').attr('title', '循环');
+        }
+        videoCycle = !videoCycle;
+    });
+}
 
