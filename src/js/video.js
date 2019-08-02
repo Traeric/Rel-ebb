@@ -8,15 +8,12 @@ $(function () {
             let topCode = $(video).html();
             // 获取RelEbbVideo的参数
             let videoSrc = $(video).attr("src");
-
-
-            // 获取视频的时长
-            
+            let autoPlay = $(video).attr('auto-play');
 
             // 替换的字符串
-            let videoDom = `
+            let videoStr = `
                 <div class="rel-ebb-video-box">
-                    <video class="rel-ebb-video" src="${videoSrc}"></video>
+                    <video class="rel-ebb-video" src="${videoSrc}" ${autoPlay === undefined ? '' : 'autoplay'}></video>
                     <!-- 视频底部控件 -->
                     <div class="rel-ebb-controls">
                         <div class="left">
@@ -26,7 +23,7 @@ $(function () {
                             <div class="time-broadcast" title="时长">
                                 <span class="current">00:00</span>
                                 /
-                                <span class="total">56:37</span>
+                                <span class="duration">00:00</span>
                             </div>
                         </div>
                         <div class="right">
@@ -50,7 +47,7 @@ $(function () {
                                 <div class="img" title="循环"></div>
                             </div>
                             <div class="definition">
-                                <div class="definition-item" title="清晰度">1080P</div>
+                                <div class="definition-item" title="清晰度">360P</div>
                                 <ul class="definition-list">
                                     <div class="color">
                                         <li>超清 1080P
@@ -65,7 +62,7 @@ $(function () {
                                 </ul>
                             </div>
                             <div class="speed">
-                                <div class="speed-item" title="播放速度">1.5x</div>
+                                <div class="speed-item" title="播放速度">1.0x</div>
                                 <ul class="speed-list">
                                     <div class="color">
                                         <li>2.0倍速
@@ -89,14 +86,50 @@ $(function () {
                     <!-- 视频面板 -->
                     <div class="video-panel">
                         <div class="top-column">
-            
+                            ${topCode}
                         </div>
                     </div>
                 </div>
             `;
-
             // 替换掉页面的Video标签
-            $(video).replaceWith(videoDom);
+            $(video).replaceWith(videoStr);
+            /**
+             * 对视频进行预处理
+             * @type {*|jQuery|Array}
+             */
+            // 获取视频的时长
+            let videoDom = $(".rel-ebb-video-box").find('video');
+            videoDom.get(0).oncanplay = () => {
+                let duration = videoDom.get(0).duration;
+                // 格式化时间
+                let formatDuration = formatTimetoStandard(duration);
+                // 设置给页面
+                $(".rel-ebb-video-box .duration").html(formatDuration);
+            };
+            // 播放过程中实时更新时间
+            videoDom.get(0).addEventListener("timeupdate", () => {
+                // 获取当前播放时间
+                let currentTime = videoDom.get(0).currentTime;
+                // 格式化时间
+                let formatCurrentTime = formatTimetoStandard(currentTime);
+                $(".rel-ebb-video-box .current").html(formatCurrentTime);
+            });
         });
     }
 });
+
+
+/**
+ * 格式化时间为标准时间
+ * @param time
+ */
+function formatTimetoStandard(time = 0) {
+    let hour = parseInt(time / 3600 + '');
+    let min = parseInt(time % 3600 / 60 + '');
+    let sec = parseInt(time % 3600 % 60 + '');
+    return `${hour > 0 ? (hour > 10 ? hour : '0' + hour) + ':' : ''}
+            ${min > 0 ? (min > 10 ? min : '0' + min) : '00'}:
+            ${sec > 10 ? sec : '0' + sec}`;
+}
+
+
