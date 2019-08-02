@@ -86,9 +86,6 @@ $(function () {
                             <div class="full-screen">
                                 <div class="img" title="全屏"></div>
                             </div>
-                            <div class="web-full-screen">
-                                <div class="img" title="网页全屏"></div>
-                            </div>
                         </div>
                     </div>
                     <!-- 视频面板 -->
@@ -250,6 +247,15 @@ function changeSpeed(videoBoxDom) {
  * @param videoBoxDom
  */
 function fullScreen(videoBoxDom) {
-
+    $(videoBoxDom).find('.full-screen .img').click(() => {
+        let element = $(videoBoxDom).find('video').get(0);
+        if (element.requestFullScreen) {
+            element.requestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+        }
+    });
 }
 
