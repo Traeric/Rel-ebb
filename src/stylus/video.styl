@@ -10,7 +10,7 @@
 
   .rel-ebb-controls
     position absolute
-    z-index 10
+    z-index 13
     bottom 0
     left 0
     width 100%
@@ -34,9 +34,14 @@
           height 25px
           width 25px
           background-size cover
-          background-image url("../../assets/images/play.png")
           border-radius 50%
           cursor pointer
+
+        .play
+          background-image url("../../assets/images/play.png")
+
+        .pause
+          background-image url("../../assets/images/pause.png")
 
     .right
       display flex
@@ -89,8 +94,8 @@
 
               .btn
                 position absolute
-                top 24px
-                left -4.5px
+                bottom 12px
+                left -5px
                 cursor pointer
                 height 12px
                 width 12px
@@ -99,11 +104,11 @@
 
               .rest
                 background-color #fff
-                height 30px
+                height 100%
 
               .seted
                 background-color #fb7299
-                height 70px
+                height 0
 
           .connect
             height 26px
@@ -114,8 +119,13 @@
           height 25px
           width 25px
           background-size cover
-          background-image url("../../assets/images/cycle.png")
           cursor pointer
+
+        .cycle
+          background-image url("../../assets/images/cycle.png")
+
+        .cycle-none
+          background-image url("../../assets/images/cycle-close.png")
 
       .definition
         position relative
@@ -138,6 +148,7 @@
           .color
             background-color rgba(0, 0, 0, .6)
             border-radius 4px
+            overflow hidden
 
             li
               padding 8px 15px
@@ -182,6 +193,7 @@
           .color
             background-color rgba(0, 0, 0, .6)
             border-radius 4px
+            overflow hidden
 
             li
               padding 8px 15px
@@ -211,17 +223,8 @@
           width 20px
           height 20px
           background-size cover
-          background-image url("../../assets/images/full-screen.png")
-          cursor pointer
-
-      .web-full-screen
-        .img
-          width 25px
-          height 25px
-          background-size cover
           background-image url("../../assets/images/web-full-screen.png")
           cursor pointer
-
 
   .video-panel
     width 100%
@@ -238,3 +241,35 @@
       position absolute
       z-index 9
 
+  .rel-ebb-progress-bar
+    position absolute
+    z-index 12
+    bottom 40px
+    left 0
+    width 100%
+
+    .bar
+      display flex
+      width 100%
+      position relative
+
+      .setted
+        height 4px
+        width 0
+        background-color rgba(254, 213, 71, .8)
+
+      .rest
+        height 4px
+        width 100%
+        background-color rgba(222, 222, 222, .5)
+
+      .btn
+        position absolute
+        bottom -4px
+        left 0
+        z-index 30
+        height 12px
+        width 12px
+        background-size contain
+        background-image: url("../../assets/images/voice_btn.png")
+        cursor pointer
