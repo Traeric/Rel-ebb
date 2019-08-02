@@ -39,7 +39,7 @@ $(function () {
                                 <div class="img" title="声音"></div>
                                 <div class="voice-panel">
                                     <div class="color">
-                                        <div class="number">70</div>
+                                        <div class="number">0</div>
                                         <div class="show">
                                             <div class="total">
                                                 <div class="rest"></div>
@@ -115,7 +115,7 @@ $(function () {
                 $(".rel-ebb-video-box .duration").html(formatDuration);
                 // 获取声音
                 let voice = videoDom.get(0).volume;
-                console.log(voice);
+                voiceBar(videoBoxDom, voice * 100);
             };
             // 播放过程中实时更新时间以及进度条
             videoDom.get(0).addEventListener("timeupdate", () => {
@@ -193,7 +193,10 @@ function progressBar(videoBoxDom, percent) {
  * @param percent
  */
 function voiceBar(videoBoxDom, percent) {
-
+    $(videoBoxDom).find('.voice-panel .seted').css('height', percent + '%');
+    $(videoBoxDom).find('.voice-panel .rest').css('height', (100 - percent) + '%');
+    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `${percent < 50 ? percent + '%' : `calc(${percent}% - 12px)`}`);
+    $(videoBoxDom).find('.voice-panel .number').html(percent);
 }
 
 
