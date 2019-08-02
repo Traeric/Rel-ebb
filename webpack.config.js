@@ -81,6 +81,15 @@ module.exports = {
                     options: '$'
                 }]
             },
+            // 引入图片
+            {
+                test: /\.(png|jpg)$/,
+                use: [
+                    {
+                        loader: "url-loader",
+                    },
+                ],
+            },
         ]
     },
     plugins: [

@@ -1,0 +1,167 @@
+.rel-ebb-video-box
+  width 100%
+  height 100%
+  position relative
+
+  .rel-ebb-video
+    width 100%
+    height 100%
+    object-fit cover
+
+  .rel-ebb-controls
+    position absolute
+    bottom 0
+    left 0
+    width 100%
+    display flex
+    justify-content space-between
+    align-items center
+    color #fff
+    background-color rgba(0, 0, 0, .5)
+    padding 5px 0
+    box-sizing border-box
+    font-size 14px
+
+  .left
+    display flex
+    justify-content space-around
+    align-items center
+    width 140px
+
+    .play
+      .img
+        height 25px
+        width 25px
+        background-size cover
+        background-image url("../../assets/images/play.png")
+        border-radius 50%
+        cursor pointer
+
+  .right
+    display flex
+    justify-content space-around
+    align-items center
+    width 240px
+
+    .voice
+      .img
+        width 25px
+        height 25px
+        background-size cover
+        background-image url("../../assets/images/voice.png")
+        cursor pointer
+
+    .cycle
+      .img
+        height 25px
+        width 25px
+        background-size cover
+        background-image url("../../assets/images/cycle.png")
+        cursor pointer
+
+    .definition
+      position relative
+
+      &:hover
+        .definition-list
+          display block
+
+      .definition-item
+        cursor pointer
+
+      .definition-list
+        list-style none
+        position absolute
+        bottom 10px
+        left -50px
+        font-size 14px
+        display none
+
+        .color
+          background-color rgba(0, 0, 0, .6)
+          border-radius 4px
+
+          li
+            padding 8px 15px
+            white-space nowrap
+            cursor pointer
+
+            &:hover
+              background-color rgba(255, 255, 255, .2)
+
+            &:nth-child(1)
+              display flex
+
+              .logo
+                width 50px
+                height 21px
+                background-size 50px 21px
+                background-repeat no-repeat
+                background-image url("../../assets/images/1080p.png")
+                margin-left 5px
+
+        .connect
+          height 26px
+          cursor pointer
+
+    .speed
+      position relative
+
+      &:hover
+        .speed-list
+          display block
+
+      .speed-item
+        cursor pointer
+
+      .speed-list
+        position absolute
+        bottom 10px
+        left -25px
+        list-style none
+        display none
+
+        .color
+          background-color rgba(0, 0, 0, .6)
+          border-radius 4px
+
+          li
+            padding 8px 15px
+            white-space nowrap
+            cursor pointer
+
+            &:hover
+              background-color rgba(255, 255, 255, .2)
+
+            &:nth-child(1)
+              display flex
+              align-items center
+
+              .logo
+                width 13px
+                height 13px
+                background-size contain
+                background-image url("../../assets/images/2.0x.png")
+                margin-left 5px
+
+        .connect
+          height 26px
+          cursor pointer
+
+    .full-screen
+      .img
+        width 20px
+        height 20px
+        background-size cover
+        background-image url("../../assets/images/full-screen.png")
+        cursor pointer
+
+    .web-full-screen
+      .img
+        width 25px
+        height 25px
+        background-size cover
+        background-image url("../../assets/images/web-full-screen.png")
+        cursor pointer
+
+
