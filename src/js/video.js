@@ -14,6 +14,14 @@ $(function () {
             let videoStr = `
                 <div class="rel-ebb-video-box">
                     <video class="rel-ebb-video" src="${videoSrc}" ${autoPlay === undefined ? '' : 'autoplay'}></video>
+                    <!-- 进度条 -->
+                    <div class="rel-ebb-progress-bar">
+                        <div class="bar">
+                            <div class="setted"></div>
+                            <div class="btn"></div>
+                            <div class="rest"></div>
+                        </div>
+                    </div>
                     <!-- 视频底部控件 -->
                     <div class="rel-ebb-controls">
                         <div class="left">
