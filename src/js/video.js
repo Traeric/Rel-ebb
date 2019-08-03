@@ -153,6 +153,8 @@ $(function () {
             voiceControlEvent(videoBoxDom);
             clickVoiceBar(videoBoxDom);
             clickMute(videoBoxDom);
+            // 进度条控制
+            progressBarEvent(videoBoxDom);
         });
     }
 });
@@ -191,7 +193,7 @@ function playEvent(videoBoxDom, videoDom) {
 function progressBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.rel-ebb-progress-bar .setted').css('width', percent + '%');
     $(videoBoxDom).find('.rel-ebb-progress-bar .rest').css('width', (100 - percent) + '%');
-    $(videoBoxDom).find('.rel-ebb-progress-bar .btn').css('left', `${percent < 50 ? percent + '%' : `calc(${percent}% - 12px)`}`);
+    $(videoBoxDom).find('.rel-ebb-progress-bar .btn').css('left', `calc(${percent}% - 6px)`);
 }
 
 /**
@@ -349,7 +351,37 @@ function clickMute(videoBoxDom) {
 }
 
 
+/**
+ * 进度条调整
+ * @param videoBoxDom
+ */
 function progressBarEvent(videoBoxDom) {
-    $(videoBoxDom).find('.rel-ebb-progress-bar')
+    let progressBtnDom = $(videoBoxDom).find('.rel-ebb-progress-bar .btn');
+    progressBtnDom.mousedown(function () {
+        $(this).mousemove(progressControl);
+    });
+    $(document).mouseup(function () {
+        $(videoBoxDom).find(".rel-ebb-progress-bar .btn").unbind('mousemove', progressControl);
+    });
+
+    progressBtnDom.mouseleave(function () {
+        $(this).unbind('mousemove', progressControl);
+    });
+}
+
+
+function progressControl(e) {
+    // 获取鼠标x轴的位置
+    let mouseX = e.clientX;
+    // 获取进度条的位置信息
+    let progressBarInfo = $(e.currentTarget).parents('.bar').get(0).getBoundingClientRect();
+    // 获取进度条左边的位置
+    let left = progressBarInfo.left;
+    // 获取进度条的长度
+    let progressBarLength = $(e.currentTarget).parents('.bar').height();
+    // 计算百分比
+    let percent = (mouseX - left) / progressBarLength;
+    // 设置样式
+    progressBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
 }
 
