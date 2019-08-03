@@ -152,6 +152,7 @@ $(function () {
             // 声音控制
             voiceControlEvent(videoBoxDom);
             clickVoiceBar(videoBoxDom);
+            clickMute(videoBoxDom);
         });
     }
 });
@@ -277,11 +278,12 @@ function voiceControlEvent(videoBoxDom) {
     $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function () {
         $(this).bind("mousemove", voiceControl);
     });
-    $(videoBoxDom).find(".voice-panel .total .btn").mouseup(function () {
-        $(this).unbind('mousemove', voiceControl);
+
+    $(document).mouseup(function () {
+        $(videoBoxDom).find(".voice-panel .total .btn").unbind('mousemove', voiceControl);
     });
 
-    $(videoBoxDom).find(".voice-panel .total .btn").mouseout(function () {
+    $(videoBoxDom).find(".voice-panel .total .btn").mouseleave(function () {
         $(this).unbind('mousemove', voiceControl);
     });
 }
@@ -326,6 +328,23 @@ function clickVoiceBar(videoBoxDom) {
         voiceBar(videoBoxDom, percent);
         // 设置声音
         $(videoBoxDom).find('video').get(0).volume = percent / 100;
+    });
+}
+
+function clickMute(videoBoxDom) {
+    let mute = false;
+    $(videoBoxDom).find(".voice .img").click(() => {
+        let videoDom = $(videoBoxDom).find('video').get(0);
+        if (mute) {
+            // 开声音
+            voiceBar(videoBoxDom, videoDom.volume * 100);
+            videoDom.muted = false;
+        } else {
+            // 关声音
+            voiceBar(videoBoxDom, 0);
+            videoDom.muted = true;
+        }
+        mute = !mute;
     });
 }
 
