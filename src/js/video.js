@@ -36,7 +36,7 @@ $(function () {
                         </div>
                         <div class="right">
                             <div class="voice">
-                                <div class="img" title="声音"></div>
+                                <div class="img voice" title="声音"></div>
                                 <div class="voice-panel">
                                     <div class="color">
                                         <div class="number">0</div>
@@ -151,6 +151,7 @@ $(function () {
             fullScreen(videoBoxDom);
             // 声音控制
             voiceControlEvent(videoBoxDom);
+            clickVoiceBar(videoBoxDom);
         });
     }
 });
@@ -200,8 +201,14 @@ function progressBar(videoBoxDom, percent) {
 function voiceBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.voice-panel .seted').css('height', percent + '%');
     $(videoBoxDom).find('.voice-panel .rest').css('height', (100 - percent) + '%');
-    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `${percent}%`);
+    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `calc(${percent}% - 6px)`);
     $(videoBoxDom).find('.voice-panel .number').html(percent);
+    if (percent === 0) {
+        // 设置灰色按钮
+        $(videoBoxDom).find('.voice .img').removeClass('voice').addClass('voice-none')
+    } else {
+        $(videoBoxDom).find('.voice .img').removeClass('voice-none').addClass('voice')
+    }
 }
 
 
@@ -281,7 +288,7 @@ function voiceControlEvent(videoBoxDom) {
 
 function voiceControl(e) {
     // 获取鼠标的y轴的位置
-    let mouseY = e.clientY + 6;
+    let mouseY = e.clientY;
     // 获取包裹音量条的顶部距离浏览器顶部的长度
     let top = $(e.currentTarget).parents('.total').get(0).getBoundingClientRect().top;
     // 设置音量条的位置
@@ -299,8 +306,31 @@ function voiceControl(e) {
     $(e.currentTarget).parents('.rel-ebb-video-box').find('video').get(0).volume = voice;
 }
 
+function clickVoiceBar(videoBoxDom) {
+    $(videoBoxDom).find(".voice-panel .total").click(function (e) {
+        // 获取鼠标y轴位置
+        let mouseY = e.clientY;
+        // 获取声音条距离顶部的位置
+        let boundInfo = $(this).get(0).getBoundingClientRect();
+        let top = boundInfo.top;
+        // 获取整个声音条的长度
+        let length = boundInfo.bottom - boundInfo.top;
+        // 获取当前点击的位置
+        let position = mouseY - top;
+        // 限制大小
+        position = Math.max(0, position);
+        position = Math.min(length, position);
+        // 获取声音百分比
+        let percent = parseInt(((length - position) / length) * 100 + '');
+        // 设置样式
+        voiceBar(videoBoxDom, percent);
+        // 设置声音
+        $(videoBoxDom).find('video').get(0).volume = percent / 100;
+    });
+}
+
 
 function progressBarEvent(videoBoxDom) {
-    
+    $(videoBoxDom).find('.rel-ebb-progress-bar')
 }
 
