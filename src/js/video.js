@@ -262,6 +262,10 @@ function fullScreen(videoBoxDom) {
 }
 
 
+/**
+ * 调整声音
+ * @param videoBoxDom
+ */
 function voiceControlEvent(videoBoxDom) {
     $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function () {
         $(this).bind("mousemove", voiceControl);
@@ -295,4 +299,8 @@ function voiceControl(e) {
     $(e.currentTarget).parents('.rel-ebb-video-box').find('video').get(0).volume = voice;
 }
 
+
+function progressBarEvent(videoBoxDom) {
+    
+}
 
