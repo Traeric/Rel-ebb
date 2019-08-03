@@ -263,7 +263,7 @@ function fullScreen(videoBoxDom) {
 
 
 function voiceControlEvent(videoBoxDom) {
-    $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function (e) {
+    $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function () {
         $(this).bind("mousemove", voiceControl);
     });
     $(videoBoxDom).find(".voice-panel .total .btn").mouseup(function () {
@@ -289,5 +289,10 @@ function voiceControl(e) {
     voiceBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
 
     // 设置音量
-    $(e.currentTarget).parents('.rel-ebb-video-box').find('video').get(0).volume = (totalHeight - (mouseY - top)) / totalHeight;
+    let voice = (totalHeight - (mouseY - top)) / totalHeight;
+    voice = Math.max(0, voice);
+    voice = Math.min(1, voice);
+    $(e.currentTarget).parents('.rel-ebb-video-box').find('video').get(0).volume = voice;
 }
+
+
