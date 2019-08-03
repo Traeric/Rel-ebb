@@ -110,10 +110,10 @@ $(function () {
                 let formatDuration = formatTimetoStandard(duration);
                 // 设置给页面
                 $(".rel-ebb-video-box .duration").html(formatDuration);
-                // 获取声音
-                let voice = videoDom.get(0).volume;
-                voiceBar(videoBoxDom, voice * 100);
             };
+            // 获取声音
+            let voice = videoDom.get(0).volume;
+            voiceBar(videoBoxDom, voice * 100);
             // 播放过程中实时更新时间以及进度条
             videoDom.get(0).addEventListener("timeupdate", () => {
                 // 获取当前播放时间
@@ -149,6 +149,8 @@ $(function () {
             changeSpeed(videoBoxDom);
             // 全屏
             fullScreen(videoBoxDom);
+            // 声音控制
+            voiceControlEvent(videoBoxDom);
         });
     }
 });
@@ -198,7 +200,7 @@ function progressBar(videoBoxDom, percent) {
 function voiceBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.voice-panel .seted').css('height', percent + '%');
     $(videoBoxDom).find('.voice-panel .rest').css('height', (100 - percent) + '%');
-    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `${percent < 50 ? percent + '%' : `calc(${percent}% - 12px)`}`);
+    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `${percent}%`);
     $(videoBoxDom).find('.voice-panel .number').html(percent);
 }
 
@@ -259,3 +261,33 @@ function fullScreen(videoBoxDom) {
     });
 }
 
+
+function voiceControlEvent(videoBoxDom) {
+    $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function (e) {
+        $(this).bind("mousemove", voiceControl);
+    });
+    $(videoBoxDom).find(".voice-panel .total .btn").mouseup(function () {
+        $(this).unbind('mousemove', voiceControl);
+    });
+
+    $(videoBoxDom).find(".voice-panel .total .btn").mouseout(function () {
+        $(this).unbind('mousemove', voiceControl);
+    });
+}
+
+function voiceControl(e) {
+    // 获取鼠标的y轴的位置
+    let mouseY = e.clientY + 6;
+    // 获取包裹音量条的顶部距离浏览器顶部的长度
+    let top = $(e.currentTarget).parents('.total').get(0).getBoundingClientRect().top;
+    // 设置音量条的位置
+    let totalHeight = $(e.currentTarget).parents('.total').height();
+    let percent = parseInt(((totalHeight - (mouseY - top)) / totalHeight) * 100 + '');
+    // 限制大小
+    percent = Math.max(0, percent);
+    percent = Math.min(100, percent);
+    voiceBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
+
+    // 设置音量
+    $(e.currentTarget).parents('.rel-ebb-video-box').find('video').get(0).volume = (totalHeight - (mouseY - top)) / totalHeight;
+}
