@@ -61,18 +61,23 @@
           width 25px
           height 25px
           background-size cover
-          background-image url("../../assets/images/voice.png")
           cursor pointer
+
+        .voice
+          background-image url("../../assets/images/voice.png")
+
+        .voice-none
+          background-image url("../../assets/images/voice-close.png")
 
         .voice-panel
           position absolute
-          bottom 12px
-          left -10px
+          bottom 25px
+          left -6px
           width 35px
           display none
 
           .color
-            padding 5px 0
+            padding 5px 0 10px 0
             background-color rgba(0, 0, 0, .7)
             border-radius 4px
             width 100%
@@ -84,6 +89,7 @@
 
             .number
               padding-bottom 10px
+              user-select none
 
             .show
               .total
@@ -91,6 +97,7 @@
                 height 100px
                 border-radius 50px
                 position relative
+                cursor pointer
 
               .btn
                 position absolute
@@ -111,7 +118,7 @@
                 height 0
 
           .connect
-            height 26px
+            height 16px
             cursor pointer
 
       .cycle
@@ -252,6 +259,7 @@
       display flex
       width 100%
       position relative
+      cursor pointer
 
       .setted
         height 4px

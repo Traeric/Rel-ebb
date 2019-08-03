@@ -36,7 +36,7 @@ $(function () {
                         </div>
                         <div class="right">
                             <div class="voice">
-                                <div class="img" title="声音"></div>
+                                <div class="img voice" title="声音"></div>
                                 <div class="voice-panel">
                                     <div class="color">
                                         <div class="number">0</div>
@@ -110,10 +110,10 @@ $(function () {
                 let formatDuration = formatTimetoStandard(duration);
                 // 设置给页面
                 $(".rel-ebb-video-box .duration").html(formatDuration);
-                // 获取声音
-                let voice = videoDom.get(0).volume;
-                voiceBar(videoBoxDom, voice * 100);
             };
+            // 获取声音
+            let voice = videoDom.get(0).volume;
+            voiceBar(videoBoxDom, voice * 100);
             // 播放过程中实时更新时间以及进度条
             videoDom.get(0).addEventListener("timeupdate", () => {
                 // 获取当前播放时间
@@ -149,6 +149,12 @@ $(function () {
             changeSpeed(videoBoxDom);
             // 全屏
             fullScreen(videoBoxDom);
+            // 声音控制
+            voiceControlEvent(videoBoxDom);
+            clickVoiceBar(videoBoxDom);
+            clickMute(videoBoxDom);
+            // 进度条控制
+            progressBarEvent(videoBoxDom);
         });
     }
 });
@@ -187,7 +193,7 @@ function playEvent(videoBoxDom, videoDom) {
 function progressBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.rel-ebb-progress-bar .setted').css('width', percent + '%');
     $(videoBoxDom).find('.rel-ebb-progress-bar .rest').css('width', (100 - percent) + '%');
-    $(videoBoxDom).find('.rel-ebb-progress-bar .btn').css('left', `${percent < 50 ? percent + '%' : `calc(${percent}% - 12px)`}`);
+    $(videoBoxDom).find('.rel-ebb-progress-bar .btn').css('left', `calc(${percent}% - 6px)`);
 }
 
 /**
@@ -198,8 +204,14 @@ function progressBar(videoBoxDom, percent) {
 function voiceBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.voice-panel .seted').css('height', percent + '%');
     $(videoBoxDom).find('.voice-panel .rest').css('height', (100 - percent) + '%');
-    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `${percent < 50 ? percent + '%' : `calc(${percent}% - 12px)`}`);
+    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `calc(${percent}% - 6px)`);
     $(videoBoxDom).find('.voice-panel .number').html(percent);
+    if (percent === 0) {
+        // 设置灰色按钮
+        $(videoBoxDom).find('.voice .img').removeClass('voice').addClass('voice-none')
+    } else {
+        $(videoBoxDom).find('.voice .img').removeClass('voice-none').addClass('voice')
+    }
 }
 
 
@@ -257,5 +269,119 @@ function fullScreen(videoBoxDom) {
             element.webkitRequestFullScreen();
         }
     });
+}
+
+
+/**
+ * 调整声音
+ * @param videoBoxDom
+ */
+function voiceControlEvent(videoBoxDom) {
+    $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function () {
+        $(this).bind("mousemove", voiceControl);
+    });
+
+    $(document).mouseup(function () {
+        $(videoBoxDom).find(".voice-panel .total .btn").unbind('mousemove', voiceControl);
+    });
+
+    $(videoBoxDom).find(".voice-panel .total .btn").mouseleave(function () {
+        $(this).unbind('mousemove', voiceControl);
+    });
+}
+
+function voiceControl(e) {
+    // 获取鼠标的y轴的位置
+    let mouseY = e.clientY;
+    // 获取包裹音量条的顶部距离浏览器顶部的长度
+    let top = $(e.currentTarget).parents('.total').get(0).getBoundingClientRect().top;
+    // 设置音量条的位置
+    let totalHeight = $(e.currentTarget).parents('.total').height();
+    let percent = parseInt(((totalHeight - (mouseY - top)) / totalHeight) * 100 + '');
+    // 限制大小
+    percent = Math.max(0, percent);
+    percent = Math.min(100, percent);
+    voiceBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
+
+    // 设置音量
+    let voice = (totalHeight - (mouseY - top)) / totalHeight;
+    voice = Math.max(0, voice);
+    voice = Math.min(1, voice);
+    $(e.currentTarget).parents('.rel-ebb-video-box').find('video').get(0).volume = voice;
+}
+
+function clickVoiceBar(videoBoxDom) {
+    $(videoBoxDom).find(".voice-panel .total").click(function (e) {
+        // 获取鼠标y轴位置
+        let mouseY = e.clientY;
+        // 获取声音条距离顶部的位置
+        let boundInfo = $(this).get(0).getBoundingClientRect();
+        let top = boundInfo.top;
+        // 获取整个声音条的长度
+        let length = boundInfo.bottom - boundInfo.top;
+        // 获取当前点击的位置
+        let position = mouseY - top;
+        // 限制大小
+        position = Math.max(0, position);
+        position = Math.min(length, position);
+        // 获取声音百分比
+        let percent = parseInt(((length - position) / length) * 100 + '');
+        // 设置样式
+        voiceBar(videoBoxDom, percent);
+        // 设置声音
+        $(videoBoxDom).find('video').get(0).volume = percent / 100;
+    });
+}
+
+function clickMute(videoBoxDom) {
+    let mute = false;
+    $(videoBoxDom).find(".voice .img").click(() => {
+        let videoDom = $(videoBoxDom).find('video').get(0);
+        if (mute) {
+            // 开声音
+            voiceBar(videoBoxDom, videoDom.volume * 100);
+            videoDom.muted = false;
+        } else {
+            // 关声音
+            voiceBar(videoBoxDom, 0);
+            videoDom.muted = true;
+        }
+        mute = !mute;
+    });
+}
+
+
+/**
+ * 进度条调整
+ * @param videoBoxDom
+ */
+function progressBarEvent(videoBoxDom) {
+    let progressBtnDom = $(videoBoxDom).find('.rel-ebb-progress-bar .btn');
+    progressBtnDom.mousedown(function () {
+        $(this).mousemove(progressControl);
+    });
+    $(document).mouseup(function () {
+        $(videoBoxDom).find(".rel-ebb-progress-bar .btn").unbind('mousemove', progressControl);
+    });
+
+    progressBtnDom.mouseleave(function () {
+        $(this).unbind('mousemove', progressControl);
+    });
+}
+
+
+function progressControl(e) {
+    // 获取鼠标x轴的位置
+    let mouseX = e.clientX;
+    // 获取进度条的位置信息
+    let progressBarInfo = $(e.currentTarget).parents('.bar').get(0).getBoundingClientRect();
+    // 获取进度条左边的位置
+    let left = progressBarInfo.left;
+    // 获取进度条的长度
+    let progressBarLength = $(e.currentTarget).parents('.bar').height();
+    // 计算百分比
+    let percent = (mouseX - left) / progressBarLength;
+    // 设置样式
+    progressBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
 }
 
