@@ -9,7 +9,31 @@ $(function () {
             // 获取RelEbbVideo的参数
             let videoSrc = $(video).attr("src");
             let autoPlay = $(video).attr('auto-play');
+            let definition = eval($(video).attr('definition'));
+            let definitionFunc = $(video).attr('definitionEvent');
 
+            let definitionStr = "";
+            if (definition !== undefined && Array.isArray(definition)) {
+                let itemsStr = '';
+                $.each(definition, (index, item) => {
+                    if (index === 0) {
+                        itemsStr += `<li data-definition="${index}">${item}
+                                        <div class="logo"></div>
+                                    </li>`;
+                    } else {
+                        itemsStr += `<li data-definition="${index}">${item}</li>`;
+                    }
+                });
+                definitionStr = `<div class="definition">
+                    <div class="definition-item" title="清晰度">${definition[0]}</div>
+                    <ul class="definition-list">
+                        <div class="color">
+                            ${itemsStr}
+                        </div>
+                        <div class="connect"></div>
+                    </ul>
+                </div>`;
+            }
             // 替换的字符串
             let videoBoxDom = $(`
                 <div class="rel-ebb-video-box">
@@ -51,24 +75,8 @@ $(function () {
                                     <div class="connect"></div>
                                 </div>
                             </div>
-                            <div class="cycle">
-                                <div class="img cycle-none" title="循环"></div>
-                            </div>
-                            <div class="definition">
-                                <div class="definition-item" title="清晰度">360P</div>
-                                <ul class="definition-list">
-                                    <div class="color">
-                                        <li data-definition="0">超清 1080P
-                                            <div class="logo"></div>
-                                        </li>
-                                        <li data-definition="1">高清 720P</li>
-                                        <li data-definition="2">清晰 480P</li>
-                                        <li data-definition="3">流畅 360P</li>
-                                        <li data-definition="4">自动</li>
-                                    </div>
-                                    <li class="connect"></li>
-                                </ul>
-                            </div>
+                            <!-- 清晰度 -->
+                            ${definitionStr}
                             <div class="speed">
                                 <div class="speed-item" title="播放速度">1.0x</div>
                                 <ul class="speed-list">
@@ -80,8 +88,11 @@ $(function () {
                                         <li data-speed="1.0">1.0倍速</li>
                                         <li data-speed="0.5">0.5倍速</li>
                                     </div>
-                                    <li class="connect"></li>
+                                    <div class="connect"></div>
                                 </ul>
+                            </div>
+                            <div class="cycle">
+                                <div class="img cycle-none" title="循环"></div>
                             </div>
                             <div class="full-screen">
                                 <div class="img" title="全屏"></div>
@@ -155,6 +166,9 @@ $(function () {
             clickMute(videoBoxDom);
             // 进度条控制
             progressBarEvent(videoBoxDom);
+            clickProgressBar(videoBoxDom);
+            // 清晰度
+            definitionEvent(videoBoxDom, definitionFunc);
         });
     }
 });
@@ -339,7 +353,7 @@ function clickMute(videoBoxDom) {
         let videoDom = $(videoBoxDom).find('video').get(0);
         if (mute) {
             // 开声音
-            voiceBar(videoBoxDom, videoDom.volume * 100);
+            voiceBar(videoBoxDom, parseInt(videoDom.volume * 100 + ''));
             videoDom.muted = false;
         } else {
             // 关声音
@@ -360,8 +374,12 @@ function progressBarEvent(videoBoxDom) {
     progressBtnDom.mousedown(function () {
         $(this).mousemove(progressControl);
     });
-    $(document).mouseup(function () {
-        $(videoBoxDom).find(".rel-ebb-progress-bar .btn").unbind('mousemove', progressControl);
+    $(progressBtnDom).mouseup(function () {
+        $(this).unbind('mousemove', progressControl);
+        $(videoBoxDom).find('video').get(0).play();
+        $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
+        $(videoBoxDom).find('.play .img').attr('title', '暂停');
+        window.videoStart = true;
     });
 
     progressBtnDom.mouseleave(function () {
@@ -378,10 +396,80 @@ function progressControl(e) {
     // 获取进度条左边的位置
     let left = progressBarInfo.left;
     // 获取进度条的长度
-    let progressBarLength = $(e.currentTarget).parents('.bar').height();
+    let progressBarLength = $(e.currentTarget).parents('.bar').width();
     // 计算百分比
     let percent = (mouseX - left) / progressBarLength;
+    // 限制百分比
+    percent = Math.max(0, percent);
+    percent = Math.min(1, percent);
     // 设置样式
-    progressBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
+    progressBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent * 100);
+    // 设置视频进度
+    let videoDom = $(e.currentTarget).parents(".rel-ebb-video-box").find('video').get(0);
+    let duration = videoDom.duration;
+    // 设置当前播放的进度
+    videoDom.currentTime = duration * percent;
 }
+
+
+function clickProgressBar(videoBoxDom) {
+    $(videoBoxDom).find('.rel-ebb-progress-bar .bar').click((e) => {
+        // 获取当前点击的位置的x值
+        let mouseX = e.clientX;
+        // 获取进度条的位置信息
+        let progressInfo = $(videoBoxDom).find('.rel-ebb-progress-bar .bar').get(0).getBoundingClientRect();
+        // 获取进度条的宽度
+        let progressBarLength = $(videoBoxDom).find('.rel-ebb-progress-bar .bar').width();
+        // 获取当前鼠标在进度条上的位置
+        let positionOnProgress = mouseX - progressInfo.left;
+        positionOnProgress = Math.max(0, positionOnProgress);
+        positionOnProgress = Math.min(progressBarLength, positionOnProgress);
+        // 获取百分比
+        let percent = positionOnProgress / progressBarLength;
+        // 设置样式
+        progressBar(videoBoxDom, percent * 100);
+        // 设置当前播放的进度
+        let videoDom = $(videoBoxDom).find('video').get(0);
+        videoDom.currentTime = videoDom.duration * percent;
+        // 播放
+        $(videoBoxDom).find('video').get(0).play();
+        $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
+        $(videoBoxDom).find('.play .img').attr('title', '暂停');
+        window.videoStart = true;
+    });
+}
+
+
+/**
+ * 点击切换清晰度事件
+ * @param videoBoxDom
+ * @param definitionFunc
+ */
+function definitionEvent(videoBoxDom, definitionFunc) {
+    $(videoBoxDom).find('.definition-list').click((e) => {
+        let currentDom = e.target;
+        if (currentDom.localName === 'li') {
+            // 获取当前点击的data值
+            let definition = $(currentDom).data('definition');
+            let resultData = eval(definitionFunc)(definition);
+            // 如果返回标志为true，那么切换清晰度否则弹窗提示
+            if (resultData.flag) {
+                let videoDom = $(videoBoxDom).find('video').get(0);
+                // 获取当前播放的时间
+                let currentTime = videoDom.currentTime;
+                // 设置给video标签并且还原到刚刚播放的位置
+                videoDom.src = resultData.src;
+                videoDom.currentTime = currentTime;
+                // 播放
+                $(videoBoxDom).find('video').get(0).play();
+                $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
+                $(videoBoxDom).find('.play .img').attr('title', '暂停');
+                window.videoStart = true;
+            } else {
+                alert(resultData.errorMag);
+            }
+        }
+    });
+}
+
 
