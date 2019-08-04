@@ -9,7 +9,30 @@ $(function () {
             // 获取RelEbbVideo的参数
             let videoSrc = $(video).attr("src");
             let autoPlay = $(video).attr('auto-play');
+            let definition = eval($(video).attr('definition'));
 
+            let definitionStr = "";
+            if (definition !== undefined && Array.isArray(definition)) {
+                let itemsStr = '';
+                $.each(definition, (index, item) => {
+                    if (index === 0) {
+                        itemsStr += `<li data-definition="0">${item}
+                                        <div class="logo"></div>
+                                    </li>`;
+                    } else {
+                        itemsStr += `<li data-definition="1">${item}</li>`;
+                    }
+                });
+                definitionStr = `<div class="definition">
+                    <div class="definition-item" title="清晰度">${definition[0]}</div>
+                    <ul class="definition-list">
+                        <div class="color">
+                            ${itemsStr}
+                        </div>
+                        <div class="connect"></div>
+                    </ul>
+                </div>`;
+            }
             // 替换的字符串
             let videoBoxDom = $(`
                 <div class="rel-ebb-video-box">
@@ -51,24 +74,8 @@ $(function () {
                                     <div class="connect"></div>
                                 </div>
                             </div>
-                            <div class="cycle">
-                                <div class="img cycle-none" title="循环"></div>
-                            </div>
-                            <div class="definition">
-                                <div class="definition-item" title="清晰度">360P</div>
-                                <ul class="definition-list">
-                                    <div class="color">
-                                        <li data-definition="0">超清 1080P
-                                            <div class="logo"></div>
-                                        </li>
-                                        <li data-definition="1">高清 720P</li>
-                                        <li data-definition="2">清晰 480P</li>
-                                        <li data-definition="3">流畅 360P</li>
-                                        <li data-definition="4">自动</li>
-                                    </div>
-                                    <li class="connect"></li>
-                                </ul>
-                            </div>
+                            <!-- 清晰度 -->
+                            ${definitionStr}
                             <div class="speed">
                                 <div class="speed-item" title="播放速度">1.0x</div>
                                 <ul class="speed-list">
@@ -80,8 +87,11 @@ $(function () {
                                         <li data-speed="1.0">1.0倍速</li>
                                         <li data-speed="0.5">0.5倍速</li>
                                     </div>
-                                    <li class="connect"></li>
+                                    <div class="connect"></div>
                                 </ul>
+                            </div>
+                            <div class="cycle">
+                                <div class="img cycle-none" title="循环"></div>
                             </div>
                             <div class="full-screen">
                                 <div class="img" title="全屏"></div>
@@ -371,10 +381,6 @@ function progressBarEvent(videoBoxDom) {
 
     progressBtnDom.mouseleave(function () {
         $(this).unbind('mousemove', progressControl);
-        // $(videoBoxDom).find('video').get(0).play();
-        // $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
-        // $(videoBoxDom).find('.play .img').attr('title', '暂停');
-        // window.videoStart = true;
     });
 }
 
@@ -422,6 +428,11 @@ function clickProgressBar(videoBoxDom) {
         // 设置当前播放的进度
         let videoDom = $(videoBoxDom).find('video').get(0);
         videoDom.currentTime = videoDom.duration * percent;
+        // 播放
+        $(videoBoxDom).find('video').get(0).play();
+        $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
+        $(videoBoxDom).find('.play .img').attr('title', '暂停');
+        window.videoStart = true;
     });
 }
 
