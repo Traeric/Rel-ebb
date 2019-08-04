@@ -73,8 +73,30 @@
 
 <script>
     function test(data) {
-        console.log(data);
-        let src = "https://www.runoob.com/try/demo_source/movie.mp4";
+        let src = '';
+        switch (data) {
+            case '0':
+                alert('1080P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '1':
+                alert('720P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '2':
+                alert('480P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '3':
+                alert('360P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '4':
+                alert('自动');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+        }
+
         return {
             flag: true,
             src,
