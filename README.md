@@ -111,12 +111,41 @@ function test(data) {
         flag: true,
         src,
         alert: true,
-        errorMag: "没有获取到该视频",
+        errorMsg: "没有获取到该视频",
     };
 }
 ```
 
 **返回值说明**
+
+该函数需要返回一个对象出去，对象的参数说明如下
+
+```js
+return {
+        flag: true,  // 标志位，如果是true，进行清晰度的切换，如果是false，不进行清晰度的切换
+        src,      // 要切换的清晰度的视频地址
+        alert: true,   // 如果flag是false，是否进行弹窗说明
+        errorMsg: "没有获取到该视频",   // 弹窗内容
+    };
+```
+
+## 视频顶部
+
+有时候，需要在视频的顶部显示一些东西，rel-ebb也提供了相应的实现，只需要在<RelEbbVideo></RelEbbVideo>里面写上需要在顶部展示的HTML代码即可，在这里面写的代码会被渲染到视频的顶部，例如：
+
+```html
+<RelEbbVideo src="https://www.w3school.com.cn/i/movie.ogg"
+             definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']"
+             definitionEvent="test">
+    <div class="top" style="width: 100%; height: 60px; background-color: #fb7299; color: #fff;">顶部栏可以添加代码哦</div>
+</RelEbbVideo>
+```
+
+效果如图：
+
+![NO IMG](./photo/1.png)
+
+
 
 
 
