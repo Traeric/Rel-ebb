@@ -454,10 +454,17 @@ function definitionEvent(videoBoxDom, definitionFunc) {
             let resultData = eval(definitionFunc)(definition);
             // 如果返回标志为true，那么切换清晰度否则弹窗提示
             if (resultData.flag) {
-                // 获取视频地址
-                let videoSrc = resultData.src;
+                let videoDom = $(videoBoxDom).find('video').get(0);
+                // 获取当前播放的时间
+                let currentTime = videoDom.currentTime;
                 // 设置给video标签并且还原到刚刚播放的位置
-                
+                videoDom.src = resultData.src;
+                videoDom.currentTime = currentTime;
+                // 播放
+                $(videoBoxDom).find('video').get(0).play();
+                $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
+                $(videoBoxDom).find('.play .img').attr('title', '暂停');
+                window.videoStart = true;
             } else {
                 alert(resultData.errorMag);
             }
