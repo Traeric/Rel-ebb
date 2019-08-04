@@ -63,7 +63,7 @@ Rel-ebb这个名字是经过三个单词拆分组合而成的，**Rel**的**re**
 |       src       | string |   ""   |    是    |                          视频的地址                          |
 |    autoplay     |  null  |   无   |    否    |             该参数不需要值，指定视频是否自动播放             |
 |   definition    | string |   无   |    否    | 该参数指定几个清晰度，是一个数组形式，RelEbbVideo标签会根据数组里面的值进行解析，放到清晰度选择面板中，例如：definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']" |
-| definitionEvent | string |   无   |    否    | 如果定义了definition参数，那么就必须设置该参数，该参数定义一个函数名，函数体由自己定义，当点击选择清晰度时会触发该函数，该函数接收一个code值，code值从0开始，指代清晰度，顺序与definition中数组所指定的清晰度对应 |
+| definitionEvent | string |   无   |    否    | 如果定义了definition参数，那么就必须设置该参数，该参数的值是一个函数名，函数体由自己定义，当点击选择清晰度时会触发该函数，该函数接收一个code值，code值从0开始，指代清晰度，顺序与definition中数组所指定的清晰度对应 |
 
 ## definition & definitionEvent
 
@@ -76,4 +76,47 @@ definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自�
 ![NO IMG](./photo/0.png)
 
 但是如此设置并没有什么效果，只是将清晰度的选择显示了出来，并不能真正的切换清晰度，如果需要实现清晰度切换，还需要借助definitionEvent参数
+
+在definitionEvent参数的值是一个函数名，该函数由自己定义，但是注意要定义在引用文件rel-ebb.js文件之后，否则会报错，该函数会传入一个code值，该code值表示当前用户点击的是哪一个清晰度，从0开始，所代表的清晰度与definition中定义的数组的索引一致，在该函数中可以根据code的不同设置不同的视频地址，以rel-ebb规定的格式返回出去，就可以实现清晰度的切换，当然，在该函数中也可以做其它的操作，譬如，有些用户的级别不够，不能观看1080P清晰度的视频，那么就可以在这个方法中进行拦截，可以在该方法中给用户进行弹窗等的提示，然后将返回的flag设置成false即可阻止清晰度的切换，例如：
+
+```js
+definitionEvent="test"
+
+function test(data) {
+    let src = '';
+    switch (data) {
+        case '0':
+            alert('1080P');
+            src = "https://www.runoob.com/try/demo_source/movie.mp4";
+            break;
+        case '1':
+            alert('720P');
+            src = "https://www.runoob.com/try/demo_source/movie.mp4";
+            break;
+        case '2':
+            alert('480P');
+            src = "https://www.runoob.com/try/demo_source/movie.mp4";
+            break;
+        case '3':
+            alert('360P');
+            src = "https://www.runoob.com/try/demo_source/movie.mp4";
+            break;
+        case '4':
+            alert('自动');
+            src = "https://www.runoob.com/try/demo_source/movie.mp4";
+            break;
+    }
+
+    return {
+        flag: true,
+        src,
+        alert: true,
+        errorMag: "没有获取到该视频",
+    };
+}
+```
+
+**返回值说明**
+
+
 

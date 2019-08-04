@@ -68,17 +68,40 @@
     <RelEbbVideo src="https://www.w3school.com.cn/i/movie.ogg"
                  definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']"
                  definitionEvent="test">
+        <div class="top" style="width: 100%; height: 60px; background-color: #fb7299; color: #fff;">顶部栏可以添加代码哦</div>
     </RelEbbVideo>
 </div>
 
 <script>
     function test(data) {
-        console.log(data);
-        let src = "https://www.runoob.com/try/demo_source/movie.mp4";
+        let src = '';
+        switch (data) {
+            case '0':
+                alert('1080P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '1':
+                alert('720P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '2':
+                alert('480P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '3':
+                alert('360P');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+            case '4':
+                alert('自动');
+                src = "https://www.runoob.com/try/demo_source/movie.mp4";
+                break;
+        }
+
         return {
             flag: true,
             src,
-            errorMag: "没有获取到该视频",
+            errorMsg: "没有获取到该视频",
         };
     }
 </script>
