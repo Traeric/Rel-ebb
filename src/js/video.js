@@ -10,17 +10,18 @@ $(function () {
             let videoSrc = $(video).attr("src");
             let autoPlay = $(video).attr('auto-play');
             let definition = eval($(video).attr('definition'));
+            let definitionFunc = $(video).attr('definitionEvent');
 
             let definitionStr = "";
             if (definition !== undefined && Array.isArray(definition)) {
                 let itemsStr = '';
                 $.each(definition, (index, item) => {
                     if (index === 0) {
-                        itemsStr += `<li data-definition="0">${item}
+                        itemsStr += `<li data-definition="${index}">${item}
                                         <div class="logo"></div>
                                     </li>`;
                     } else {
-                        itemsStr += `<li data-definition="1">${item}</li>`;
+                        itemsStr += `<li data-definition="${index}">${item}</li>`;
                     }
                 });
                 definitionStr = `<div class="definition">
@@ -166,6 +167,8 @@ $(function () {
             // 进度条控制
             progressBarEvent(videoBoxDom);
             clickProgressBar(videoBoxDom);
+            // 清晰度
+            definitionEvent(videoBoxDom, definitionFunc);
         });
     }
 });
@@ -350,7 +353,7 @@ function clickMute(videoBoxDom) {
         let videoDom = $(videoBoxDom).find('video').get(0);
         if (mute) {
             // 开声音
-            voiceBar(videoBoxDom, videoDom.volume * 100);
+            voiceBar(videoBoxDom, parseInt(videoDom.volume * 100 + ''));
             videoDom.muted = false;
         } else {
             // 关声音
@@ -435,4 +438,31 @@ function clickProgressBar(videoBoxDom) {
         window.videoStart = true;
     });
 }
+
+
+/**
+ * 点击切换清晰度事件
+ * @param videoBoxDom
+ * @param definitionFunc
+ */
+function definitionEvent(videoBoxDom, definitionFunc) {
+    $(videoBoxDom).find('.definition-list').click((e) => {
+        let currentDom = e.target;
+        if (currentDom.localName === 'li') {
+            // 获取当前点击的data值
+            let definition = $(currentDom).data('definition');
+            let resultData = eval(definitionFunc)(definition);
+            // 如果返回标志为true，那么切换清晰度否则弹窗提示
+            if (resultData.flag) {
+                // 获取视频地址
+                let videoSrc = resultData.src;
+                // 设置给video标签并且还原到刚刚播放的位置
+                
+            } else {
+                alert(resultData.errorMag);
+            }
+        }
+    });
+}
+
 

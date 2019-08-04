@@ -63,9 +63,12 @@
     src
     autoplay
     definition
+    definitionEvent
 </mark>
 <div class="video">
-    <RelEbbVideo src="https://www.w3school.com.cn/i/movie.ogg" definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']"></RelEbbVideo>
+    <RelEbbVideo src="https://www.w3school.com.cn/i/movie.ogg"
+                 definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']" definitionEvent="test">
+    </RelEbbVideo>
 <!--    <div class="rel-ebb-video-box">-->
 <!--        <video class="rel-ebb-video" src="https://www.w3school.com.cn/i/movie.ogg"></video>-->
 <!--        &lt;!&ndash; 进度条 &ndash;&gt;-->
@@ -150,5 +153,15 @@
 <!--        </div>-->
 <!--    </div>-->
 </div>
+
+<script>
+    function test(data) {
+        console.log(data);
+        return {
+            flag: false,
+            errorMag: "没有获取到该视频",
+        };
+    }
+</script>
 </body>
 </html>
