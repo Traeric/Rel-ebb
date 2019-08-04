@@ -7,7 +7,7 @@ $(function () {
             // 获取RelEbbVideo内部的代码，这段代码会被添加到项目的顶部
             let topCode = $(video).html();
             // 获取RelEbbVideo的参数
-            let videoSrc = $(video).attr("src");
+            let videoSrc = $(video).attr("src") || '';
             let autoPlay = $(video).attr('auto-play');
             let definition = eval($(video).attr('definition'));
             let definitionFunc = $(video).attr('definitionEvent');
@@ -25,7 +25,7 @@ $(function () {
                     }
                 });
                 definitionStr = `<div class="definition">
-                    <div class="definition-item" title="清晰度">${definition[0]}</div>
+                    <div class="definition-item" title="清晰度">${definition[definition.length - 1]}</div>
                     <ul class="definition-list">
                         <div class="color">
                             ${itemsStr}
@@ -168,7 +168,7 @@ $(function () {
             progressBarEvent(videoBoxDom);
             clickProgressBar(videoBoxDom);
             // 清晰度
-            definitionEvent(videoBoxDom, definitionFunc);
+            definitionEvent(videoBoxDom, definitionFunc, definition);
         });
     }
 });
@@ -444,8 +444,9 @@ function clickProgressBar(videoBoxDom) {
  * 点击切换清晰度事件
  * @param videoBoxDom
  * @param definitionFunc
+ * @param definitionArr
  */
-function definitionEvent(videoBoxDom, definitionFunc) {
+function definitionEvent(videoBoxDom, definitionFunc, definitionArr) {
     $(videoBoxDom).find('.definition-list').click((e) => {
         let currentDom = e.target;
         if (currentDom.localName === 'li') {
@@ -465,6 +466,8 @@ function definitionEvent(videoBoxDom, definitionFunc) {
                 $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
                 $(videoBoxDom).find('.play .img').attr('title', '暂停');
                 window.videoStart = true;
+                // 将清晰度提示更新在视频条上
+                $(videoBoxDom).find(".definition .definition-item").html(definitionArr[definition]);
             } else {
                 alert(resultData.errorMag);
             }

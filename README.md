@@ -43,3 +43,37 @@ Rel-ebb这个名字是经过三个单词拆分组合而成的，**Rel**的**re**
     </swiper>
 ```
 
+# 视频
+
+插入视频的标签是<RelEbbVideo></RelEbbVideo>，该标签自动适应父级元素的宽度，大小由包裹该标签的父级标签决定，可以由自己定义。
+
+## 示例代码
+
+```html
+<RelEbbVideo src="https://www.w3school.com.cn/i/movie.ogg"
+             definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']"
+             definitionEvent="test">
+</RelEbbVideo>
+```
+
+## 基本参数
+
+|      属性       |  类型  | 默认值 | 是否必须 |                             说明                             |
+| :-------------: | :----: | :----: | :------: | :----------------------------------------------------------: |
+|       src       | string |   ""   |    是    |                          视频的地址                          |
+|    autoplay     |  null  |   无   |    否    |             该参数不需要值，指定视频是否自动播放             |
+|   definition    | string |   无   |    否    | 该参数指定几个清晰度，是一个数组形式，RelEbbVideo标签会根据数组里面的值进行解析，放到清晰度选择面板中，例如：definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']" |
+| definitionEvent | string |   无   |    否    | 如果定义了definition参数，那么就必须设置该参数，该参数定义一个函数名，函数体由自己定义，当点击选择清晰度时会触发该函数，该函数接收一个code值，code值从0开始，指代清晰度，顺序与definition中数组所指定的清晰度对应 |
+
+## definition & definitionEvent
+
+definition指定要显示哪些清晰度，例如当设置如下清晰度时
+
+definition="['高清 1080P', '超清 720P', '清晰 480P', '流畅 360P', '自动']"
+
+在清晰度面板上会如下显示
+
+![NO IMG](./photo/0.png)
+
+但是如此设置并没有什么效果，只是将清晰度的选择显示了出来，并不能真正的切换清晰度，如果需要实现清晰度切换，还需要借助definitionEvent参数
+
