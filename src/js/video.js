@@ -469,7 +469,7 @@ function definitionEvent(videoBoxDom, definitionFunc, definitionArr) {
                 // 将清晰度提示更新在视频条上
                 $(videoBoxDom).find(".definition .definition-item").html(definitionArr[definition]);
             } else {
-                resultData.alert && alert(resultData.errorMag);
+                resultData.alert && alert(resultData.errorMsg);
             }
         }
     });
