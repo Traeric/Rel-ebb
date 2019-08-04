@@ -155,6 +155,7 @@ $(function () {
             clickMute(videoBoxDom);
             // 进度条控制
             progressBarEvent(videoBoxDom);
+            clickProgressBar(videoBoxDom);
         });
     }
 });
@@ -360,12 +361,20 @@ function progressBarEvent(videoBoxDom) {
     progressBtnDom.mousedown(function () {
         $(this).mousemove(progressControl);
     });
-    $(document).mouseup(function () {
-        $(videoBoxDom).find(".rel-ebb-progress-bar .btn").unbind('mousemove', progressControl);
+    $(progressBtnDom).mouseup(function () {
+        $(this).unbind('mousemove', progressControl);
+        $(videoBoxDom).find('video').get(0).play();
+        $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
+        $(videoBoxDom).find('.play .img').attr('title', '暂停');
+        window.videoStart = true;
     });
 
     progressBtnDom.mouseleave(function () {
         $(this).unbind('mousemove', progressControl);
+        // $(videoBoxDom).find('video').get(0).play();
+        // $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
+        // $(videoBoxDom).find('.play .img').attr('title', '暂停');
+        // window.videoStart = true;
     });
 }
 
@@ -378,10 +387,41 @@ function progressControl(e) {
     // 获取进度条左边的位置
     let left = progressBarInfo.left;
     // 获取进度条的长度
-    let progressBarLength = $(e.currentTarget).parents('.bar').height();
+    let progressBarLength = $(e.currentTarget).parents('.bar').width();
     // 计算百分比
     let percent = (mouseX - left) / progressBarLength;
+    // 限制百分比
+    percent = Math.max(0, percent);
+    percent = Math.min(1, percent);
     // 设置样式
-    progressBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
+    progressBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent * 100);
+    // 设置视频进度
+    let videoDom = $(e.currentTarget).parents(".rel-ebb-video-box").find('video').get(0);
+    let duration = videoDom.duration;
+    // 设置当前播放的进度
+    videoDom.currentTime = duration * percent;
+}
+
+
+function clickProgressBar(videoBoxDom) {
+    $(videoBoxDom).find('.rel-ebb-progress-bar .bar').click((e) => {
+        // 获取当前点击的位置的x值
+        let mouseX = e.clientX;
+        // 获取进度条的位置信息
+        let progressInfo = $(videoBoxDom).find('.rel-ebb-progress-bar .bar').get(0).getBoundingClientRect();
+        // 获取进度条的宽度
+        let progressBarLength = $(videoBoxDom).find('.rel-ebb-progress-bar .bar').width();
+        // 获取当前鼠标在进度条上的位置
+        let positionOnProgress = mouseX - progressInfo.left;
+        positionOnProgress = Math.max(0, positionOnProgress);
+        positionOnProgress = Math.min(progressBarLength, positionOnProgress);
+        // 获取百分比
+        let percent = positionOnProgress / progressBarLength;
+        // 设置样式
+        progressBar(videoBoxDom, percent * 100);
+        // 设置当前播放的进度
+        let videoDom = $(videoBoxDom).find('video').get(0);
+        videoDom.currentTime = videoDom.duration * percent;
+    });
 }
 
