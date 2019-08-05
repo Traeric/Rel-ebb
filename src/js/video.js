@@ -452,7 +452,7 @@ function definitionEvent(videoBoxDom, definitionFunc, definitionArr) {
         if (currentDom.localName === 'li') {
             // 获取当前点击的data值
             let definition = $(currentDom).data('definition');
-            let resultData = eval(definitionFunc)(definition);
+            let resultData = eval(definitionFunc.replace("()", ""))(definition);
             // 如果返回标志为true，那么切换清晰度否则弹窗提示
             if (resultData.flag) {
                 let videoDom = $(videoBoxDom).find('video').get(0);

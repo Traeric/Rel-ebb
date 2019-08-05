@@ -85,23 +85,23 @@ definitionEvent="test"
 function test(data) {
     let src = '';
     switch (data) {
-        case '0':
+        case 0:
             alert('1080P');
             src = "https://www.runoob.com/try/demo_source/movie.mp4";
             break;
-        case '1':
+        case 1:
             alert('720P');
             src = "https://www.runoob.com/try/demo_source/movie.mp4";
             break;
-        case '2':
+        case 2:
             alert('480P');
             src = "https://www.runoob.com/try/demo_source/movie.mp4";
             break;
-        case '3':
+        case 3:
             alert('360P');
             src = "https://www.runoob.com/try/demo_source/movie.mp4";
             break;
-        case '4':
+        case 4:
             alert('自动');
             src = "https://www.runoob.com/try/demo_source/movie.mp4";
             break;
