@@ -44,17 +44,21 @@ function openCamera(cameraDom) {
             video: {width: $(video).width(), height: $(video).height()},
             audio: true
         };
-        //这里介绍新的方法，返回一个 Promise对象
-        // 这个Promise对象返回成功后的回调函数带一个 MediaStream 对象作为其参数
-        // then()是Promise对象里的方法
-        // then()方法是异步执行，当then()前的方法执行完后再执行then()内部的程序
-        // 避免数据没有获取到
-        let promise = navigator.mediaDevices.getUserMedia(constraints);
-        promise.then(function (MediaStream) {
+        navigator.mediaDevices.getUserMedia(constraints).then(function (MediaStream) {
             window.mediaStreamTrack = typeof MediaStream.stop === 'function' ? MediaStream : MediaStream.getTracks()[1];
             video.srcObject = MediaStream;
             video.muted = true;
-            video.play();
+            video.onloadedmetadata = function () {
+                video.play();
+            };
+        }).catch((err) => {
+            if (err.name === "NotAllowedError") {
+                alert("已禁止");
+            } else if (err.name === "NotFoundError") {
+                alert("没有找到摄像头");
+            } else {
+                alert("未知错误");
+            }
         });
     });
 }
@@ -82,12 +86,14 @@ function takePhoto(cameraDom, photoName) {
     $(cameraDom).find('.btns .take').click(() => {
         if (window.mediaStreamTrack && window.mediaStreamTrack.readyState === "live") {
             let video = $(cameraDom).find('video').get(0);
-            let canvas = $(cameraDom).find('canvas').css("transform", "rotateY(180deg)").get(0);
+            let canvas = $(cameraDom).find('canvas').get(0);
             canvas.width = $(video).width();
             canvas.height = $(video).height();
             let ctx = canvas.getContext('2d');
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
             ctx.drawImage(video, 0, 0);
-            // 卸载
+            // 下载
             let img = canvas.toDataURL("image/png");
             let triggerDownload = $(cameraDom).find('.show-photo a').attr("href", img).attr("download", photoName + ".png");
             triggerDownload[0].click();
@@ -96,3 +102,5 @@ function takePhoto(cameraDom, photoName) {
         }
     });
 }
+
+
