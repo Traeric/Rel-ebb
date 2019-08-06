@@ -94,13 +94,11 @@
 </div>
 
 <h1>Upload File</h1>
-<mark>
-    文件上传插件
-    <h2>ImgUpload</h2>
-    图片上传 <br>
-    param:
-</mark>
-<div class="file-upload">
+文件上传插件
+<h2>ImgUpload</h2>
+图片上传 <br>
+param:
+<div class="img-upload">
     <ImgUpload param="imgParam"></ImgUpload>
     <!--    <div class="rel-ebb-img-upload">-->
     <!--        <div class="upload-button">-->
@@ -122,6 +120,36 @@
     <!--            </div>-->
     <!--        </div>-->
     <!--    </div>-->
+</div>
+
+<h2>FileUpload</h2>
+文件上传 <br>
+param:
+<div class="file-upload">
+        <FileUpload param="fileParam"></FileUpload>
+<!--    <div class="rel-ebb-img-upload">-->
+<!--        <div class="upload-button">-->
+<!--            <input class="upload-input" type="file" name="image" title="">-->
+<!--            <button class="file-button upload">选择文件</button>-->
+<!--        </div>-->
+<!--        <div class="file-upload-display">-->
+<!--            <div class="status uploading">正在上传</div>-->
+<!--            <div class="file-name">-->
+<!--                <div class="word">-->
+<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
+<!--                </div>-->
+<!--                <div class="status-item-success">上传成功</div>-->
+<!--                <div class="icon success"></div>-->
+<!--            </div>-->
+<!--            <div class="file-name">-->
+<!--                <div class="word">-->
+<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
+<!--                </div>-->
+<!--                <div class="status-item-error">上传失败</div>-->
+<!--                <div class="icon error"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 
 <script>
@@ -167,8 +195,29 @@
             uploadMultiple: false,
             parallelNum: 2,
             timeout: 3000,
-            // acceptFile: "['jpg', 'png']",
-            // refuseFile: "['zip', 'tar']",
+            success(data) {
+                alert(data);
+            },
+            error(code, msg) {
+                alert(code);
+                alert(msg);
+            },
+        };
+    }
+
+
+    function fileParam() {
+        return {
+            url: "http://127.0.0.1:8888/img",   //
+            method: "post",   //
+            // maxSize: "1024",   // kb
+            fileName: "file",  //
+            uploadMultiple: false,   //
+            parallelNum: 2,
+            timeout: 3000,     //
+            // acceptFile: "[]",   //
+            refuseFile: "['zip', 'tar']",   //
+            autoUpload: false,
             success(data) {
                 alert(data);
             },
