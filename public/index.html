@@ -24,7 +24,15 @@
             margin-bottom: 50px;
         }
 
-        .camera {width: 450px; height: 500px; margin-bottom: 50px;}
+        .camera {
+            width: 450px;
+            height: 500px;
+            margin-bottom: 50px;
+        }
+
+        .file-upload {
+            margin-bottom: 50px;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +93,65 @@
     <Camera photoName="test"></Camera>
 </div>
 
+<h1>Upload File</h1>
+文件上传插件
+<h2>ImgUpload</h2>
+图片上传 <br>
+param:
+<div class="img-upload">
+    <ImgUpload param="imgParam"></ImgUpload>
+    <!--    <div class="rel-ebb-img-upload">-->
+    <!--        <div class="upload-button">-->
+    <!--            <input class="upload-input" type="file" name="image" title="">-->
+    <!--            <button class="upload">选择图片</button>-->
+    <!--        </div>-->
+    <!--        <div class="upload-display">-->
+    <!--            <div class="img">-->
+    <!--                <div class="inner">-->
+    <!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
+    <!--                         alt="NO IMG">-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <div class="img">-->
+    <!--                <div class="inner">-->
+    <!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
+    <!--                         alt="NO IMG">-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</div>
+
+<h2>FileUpload</h2>
+文件上传 <br>
+param:
+<div class="file-upload">
+        <FileUpload param="fileParam"></FileUpload>
+<!--    <div class="rel-ebb-img-upload">-->
+<!--        <div class="upload-button">-->
+<!--            <input class="upload-input" type="file" name="image" title="">-->
+<!--            <button class="file-button upload">选择文件</button>-->
+<!--        </div>-->
+<!--        <div class="file-upload-display">-->
+<!--            <div class="status uploading">正在上传</div>-->
+<!--            <div class="file-name">-->
+<!--                <div class="word">-->
+<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
+<!--                </div>-->
+<!--                <div class="status-item-success">上传成功</div>-->
+<!--                <div class="icon success"></div>-->
+<!--            </div>-->
+<!--            <div class="file-name">-->
+<!--                <div class="word">-->
+<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
+<!--                </div>-->
+<!--                <div class="status-item-error">上传失败</div>-->
+<!--                <div class="icon error"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+
 <script>
     function test(data) {
         let src = '';
@@ -115,6 +182,49 @@
             flag: true,
             src,
             errorMsg: "没有获取到该视频",
+        };
+    }
+
+
+    function imgParam() {
+        return {
+            url: "http://127.0.0.1:8888/img",
+            method: "post",
+            maxSize: "1024",   // kb
+            fileName: "file",
+            uploadMultiple: false,
+            parallelNum: 2,
+            timeout: 3000,
+            success(data) {
+                alert(data);
+            },
+            error(code, msg) {
+                alert(code);
+                alert(msg);
+            },
+        };
+    }
+
+
+    function fileParam() {
+        return {
+            url: "http://127.0.0.1:8888/img",   //
+            method: "post",   //
+            // maxSize: "1024",   // kb
+            fileName: "file",  //
+            uploadMultiple: false,   //
+            parallelNum: 2,
+            timeout: 3000,     //
+            // acceptFile: "[]",   //
+            refuseFile: "['zip', 'tar']",   //
+            autoUpload: true,
+            success(data) {
+                alert(data);
+            },
+            error(code, msg) {
+                alert(code);
+                alert(msg);
+            },
         };
     }
 </script>
