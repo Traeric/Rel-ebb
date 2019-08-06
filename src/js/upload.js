@@ -178,7 +178,9 @@ function dealWithFileUpload(fileDom, paramObj) {
     $(fileDom).find("input[type=file]").change(function () {
         // 获取用户上传的文件信息
         let fileObj = $(this).get(0).files[0];
-        fileUploadCommon(paramObj, fileObj, (data) => {
+        // 初始化进度条
+        $(fileDom).find(".progress-bar .color").css("width", '0');
+        fileUploadCommon(paramObj, fileObj, fileDom, (data) => {
             // 上传成功，进行回显
             let successDom = $(`
                     <div class="file-name">
@@ -189,7 +191,8 @@ function dealWithFileUpload(fileDom, paramObj) {
                         <div class="icon success"></div>
                     </div>
                 `);
-            $(fileDom).find(".file-upload-display").empty().append(successDom);
+            $(fileDom).find(".file-upload-display .file-name").remove();
+            $(fileDom).find(".file-upload-display").append(successDom);
         }, (data) => {
             // 上传失败，进行回显
             let errorDom = $(`
@@ -201,7 +204,8 @@ function dealWithFileUpload(fileDom, paramObj) {
                         <div class="icon error"></div>
                     </div>
                 `);
-            $(fileDom).find(".file-upload-display").empty().append(errorDom);
+            $(fileDom).find(".file-upload-display .file-name").remove();
+            $(fileDom).find(".file-upload-display").append(errorDom);
         });
     });
 }
@@ -224,10 +228,13 @@ function dealWithFileUploadWithoutAuto(fileDom, paramObj) {
                 </div>
             </div>
         `);
-        $(fileDom).find(".file-upload-display").empty().append(fileInfo);
+        // 刷新显示区域
+        $(fileDom).find(".progress-bar .color").css("width", '0');
+        $(fileDom).find(".file-upload-display .file-name").remove();
+        $(fileDom).find(".file-upload-display").append(fileInfo);
         // 为上传按钮设置点击事件
         $(fileDom).find("button.start-upload").click(() => {
-            fileUploadCommon(paramObj, fileObj, (data) => {
+            fileUploadCommon(paramObj, fileObj, fileDom, (data) => {
                 // 上传成功，进行回显
                 fileInfo.append(`
                     <div class="status-item-success">上传成功</div>
@@ -273,10 +280,11 @@ let xhrOnProgress = function (fun) {
  * 文件上传共同代码
  * @param paramObj
  * @param fileObj
+ * @param fileDom
  * @param successCallback
  * @param errorCallback
  */
-function fileUploadCommon(paramObj, fileObj, successCallback, errorCallback) {
+function fileUploadCommon(paramObj, fileObj, fileDom, successCallback, errorCallback) {
     // 检测上传文件是否符合要求
     let surfixArr = fileObj.name.split('.');
     let surfix = surfixArr[surfixArr.length - 1];
@@ -306,8 +314,9 @@ function fileUploadCommon(paramObj, fileObj, successCallback, errorCallback) {
         processData: false,   // 告诉jQuery不要处理数据
         contentType: false,   // 告诉jQuery不要设置类型
         xhr: xhrOnProgress(function (e) {
-            let percent = e.loaded / e.total;//文件上传百分比
-            console.log(percent);
+            let percent = e.loaded / e.total;   // 文件上传百分比
+            // 渲染进度条
+            $(fileDom).find(".progress-bar .color").css("width", `${percent * 100}%`);
         }),
         success(data) {
             // 执行成功回调
