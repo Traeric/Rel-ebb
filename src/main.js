@@ -7,6 +7,8 @@ import "./js/video";
 import "./stylus/video.styl";
 
 import "./stylus/camera.styl";
-import "./js/camera"
+import "./js/camera";
+
+import "./stylus/upload.styl";
 
 

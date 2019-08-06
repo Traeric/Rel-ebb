@@ -24,7 +24,15 @@
             margin-bottom: 50px;
         }
 
-        .camera {width: 450px; height: 500px; margin-bottom: 50px;}
+        .camera {
+            width: 450px;
+            height: 500px;
+            margin-bottom: 50px;
+        }
+
+        .file-upload {
+            margin-bottom: 50px;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +91,28 @@
 </mark>
 <div class="camera">
     <Camera photoName="test"></Camera>
+</div>
+
+<h1>Upload File</h1>
+<mark>
+    文件上传插件
+</mark>
+<div class="file-upload">
+    <!--    <ImgUpload></ImgUpload>-->
+    <div class="rel-ebb-img-upload">
+        <div class="upload-button">
+            <input class="upload-input" type="file" name="image" title="">
+            <button class="upload">选择图片</button>
+        </div>
+        <div class="upload-display">
+            <div class="img">
+                <div class="inner">
+                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"
+                         alt="NO IMG">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
