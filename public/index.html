@@ -96,29 +96,32 @@
 <h1>Upload File</h1>
 <mark>
     文件上传插件
+    <h2>ImgUpload</h2>
+    图片上传 <br>
+    param:
 </mark>
 <div class="file-upload">
-        <ImgUpload></ImgUpload>
-<!--    <div class="rel-ebb-img-upload">-->
-<!--        <div class="upload-button">-->
-<!--            <input class="upload-input" type="file" name="image" title="">-->
-<!--            <button class="upload">选择图片</button>-->
-<!--        </div>-->
-<!--        <div class="upload-display">-->
-<!--            <div class="img">-->
-<!--                <div class="inner">-->
-<!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
-<!--                         alt="NO IMG">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="img">-->
-<!--                <div class="inner">-->
-<!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
-<!--                         alt="NO IMG">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <ImgUpload param="imgParam"></ImgUpload>
+    <!--    <div class="rel-ebb-img-upload">-->
+    <!--        <div class="upload-button">-->
+    <!--            <input class="upload-input" type="file" name="image" title="">-->
+    <!--            <button class="upload">选择图片</button>-->
+    <!--        </div>-->
+    <!--        <div class="upload-display">-->
+    <!--            <div class="img">-->
+    <!--                <div class="inner">-->
+    <!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
+    <!--                         alt="NO IMG">-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <div class="img">-->
+    <!--                <div class="inner">-->
+    <!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
+    <!--                         alt="NO IMG">-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </div>
 
 <script>
@@ -151,6 +154,28 @@
             flag: true,
             src,
             errorMsg: "没有获取到该视频",
+        };
+    }
+
+
+    function imgParam() {
+        return {
+            url: "http://127.0.0.1:8888/img",
+            method: "post",
+            maxSize: "1024",   // kb
+            fileName: "file",
+            uploadMultiple: false,
+            parallelNum: 2,
+            timeout: 3000,
+            // acceptFile: "['jpg', 'png']",
+            // refuseFile: "['zip', 'tar']",
+            success(data) {
+                alert(data);
+            },
+            error(code, msg) {
+                alert(code);
+                alert(msg);
+            },
         };
     }
 </script>
