@@ -10,5 +10,6 @@ import "./stylus/camera.styl";
 import "./js/camera";
 
 import "./stylus/upload.styl";
+import "./js/upload";
 
 
