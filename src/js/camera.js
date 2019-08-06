@@ -12,6 +12,7 @@ $(function () {
                         <video autoplay id="rel-ebb-camera"></video>
                         <canvas></canvas>
                         <a></a>
+                        <div class="cover-panel"></div>
                     </div>
                     <div class="btns">
                         <button class="take-photo-btn open">开启摄像头</button>

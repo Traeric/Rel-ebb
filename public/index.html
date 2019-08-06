@@ -15,14 +15,16 @@
         .swiper {
             height: 300px;
             width: 700px;
+            margin-bottom: 50px;
         }
 
         .video {
             width: 500px;
             height: 300px;
+            margin-bottom: 50px;
         }
 
-        .camera {width: 450px; height: 500px; margin-bottom: 100px;}
+        .camera {width: 450px; height: 500px; margin-bottom: 50px;}
     </style>
 </head>
 <body>
@@ -77,20 +79,10 @@
 <h1>Camera</h1>
 <mark>
     拍照插件<br>
-    photoName
+    photoName: 拍照时保存的照片名字
 </mark>
 <div class="camera">
-    <Camera></Camera>
-<!--    <div class="rel-ebb-camera-box">-->
-<!--        <div class="show-photo">-->
-<!--            <video autoplay id="rel-ebb-camera"></video>-->
-<!--        </div>-->
-<!--        <div class="btns">-->
-<!--            <button class="take-photo-btn open">开启摄像头</button>-->
-<!--            <button class="take-photo-btn close">关闭摄像头</button>-->
-<!--            <button class="take-photo-btn take">拍 照</button>-->
-<!--        </div>-->
-<!--    </div>-->
+    <Camera photoName="test"></Camera>
 </div>
 
 <script>
