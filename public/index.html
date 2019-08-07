@@ -212,18 +212,18 @@ param:
             method: "post",   //
             // maxSize: "1024",   // kb
             fileName: "file",  //
-            uploadMultiple: false,   //
+            uploadMultiple: true,   //
             parallelNum: 2,
             timeout: 3000,     //
             // acceptFile: "[]",   //
             refuseFile: "['zip', 'tar']",   //
-            autoUpload: true,
+            autoUpload: false,
             success(data) {
-                alert(data);
+                console.log(data);
             },
             error(code, msg) {
-                alert(code);
-                alert(msg);
+                console.log(code);
+                console.log(msg);
             },
         };
     }
