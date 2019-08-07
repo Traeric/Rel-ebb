@@ -166,6 +166,12 @@ function dealWithImgUploadMultiply(imageDom, paramObj) {
         if (fileObjArr.length <= 0) {
             return;
         }
+        // 检测是否超过了同时上传文件的限制
+        if (paramObj.parallelNum !== -1 && paramObj.parallelNum < fileObjArr.length) {
+            // 执行失败方法
+            paramObj.error !== undefined && paramObj.error(3, "文件数量超过了限制");
+            return;
+        }
         let formData = new FormData();
         // 检测上传的图片是否符合规范
         fileObjArr.forEach((fileObj) => {
@@ -389,6 +395,12 @@ function multiplyFileUploadAuto(fileDom, paramObj) {
         if (fileObjArr.length <= 0) {
             return;
         }
+        // 检测是否超过了同时上传文件的限制
+        if (paramObj.parallelNum !== -1 && paramObj.parallelNum < fileObjArr.length) {
+            // 执行失败方法
+            paramObj.error !== undefined && paramObj.error(3, "文件数量超过了限制");
+            return;
+        }
         // 一个一个上传
         // 清空显示区域
         $(fileDom).find(".file-upload-display .file-name").remove();
@@ -436,6 +448,12 @@ function multiplyFileUploadWithoutAuto(fileDom, paramObj) {
         let fileObjArr = Object.values(filesObj);
         // 用户没有选择文件
         if (fileObjArr.length <= 0) {
+            return;
+        }
+        // 检测是否超过了同时上传文件的限制
+        if (paramObj.parallelNum !== -1 && paramObj.parallelNum < fileObjArr.length) {
+            // 执行失败方法
+            paramObj.error !== undefined && paramObj.error(3, "文件数量超过了限制");
             return;
         }
         // 将文件名显示在页面上
