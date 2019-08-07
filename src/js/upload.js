@@ -23,7 +23,13 @@ $(function () {
             // 替换标签
             $(image).replaceWith(imageDom);
             // 监听input标签，处理图片上传
-            dealWithImgUpload(imageDom, paramObj);
+            if (paramObj.uploadMultiple) {
+                // 多图片上传
+                dealWithImgUploadMultiply(imageDom, paramObj);
+            } else {
+                // 单图片上传
+                dealWithImgUpload(imageDom, paramObj);
+            }
         });
     }
 
@@ -55,11 +61,12 @@ $(function () {
             // 替换掉FileUpload标签
             $(file).replaceWith(fileDom);
             // 处理上传事件
-            if (paramObj.autoUpload) {
-                // 自动上传
-                dealWithFileUpload(fileDom, paramObj);
+            if (paramObj.uploadMultiple) {
+                // 多文件上传
+                dealWithMultiplyFileUpload(fileDom, paramObj);
             } else {
-                dealWithFileUploadWithoutAuto(fileDom, paramObj);
+                // 单文件上传
+                dealWithSingleFileUpload(fileDom, paramObj);
             }
         });
     }
@@ -84,7 +91,7 @@ function defaultImgParam(paramObj) {
 
 
 /**
- * 处理图片上传
+ * 处理单个图片上传
  * @param imageDom
  * @param paramObj
  */
@@ -92,23 +99,113 @@ function dealWithImgUpload(imageDom, paramObj) {
     $(imageDom).find("input[type=file]").change(function () {
         // 获取用户上传的图片信息
         let fileObj = $(this).get(0).files[0];
-        // 检测上传图片是否符合要求
-        let surfixArr = fileObj.name.split('.');
-        let surfix = surfixArr[surfixArr.length - 1];
-        if (paramObj.acceptFile.indexOf(surfix.toLowerCase()) === -1) {
-            // 不是图片类型
-            paramObj.error !== undefined && paramObj.error(2, "请上传图片");
+        // 如果用户没有做选择
+        if (!fileObj) {
             return;
         }
-        if (paramObj.maxSize !== -1 && paramObj.maxSize < fileObj.size / 1024) {
-            paramObj.error !== undefined && paramObj.error(1, "图片过大");
-            return;
-        }
-        // 封装上传信息
         let formData = new FormData();
-        formData.append(paramObj.fileName, fileObj);
-        // 获取url
-        let src = URL.createObjectURL(fileObj);
+        // 进行图片检测，是否符合上传规范
+        let result = imageUploadCheckCommon(paramObj, fileObj, formData);
+        if (result) {
+            // 获取url
+            let src = URL.createObjectURL(fileObj);
+            $.ajax({
+                url: paramObj.url,
+                type: paramObj.method,
+                data: formData,
+                timeout: paramObj.timeout,
+                processData: false,   // 告诉jQuery不要处理数据
+                contentType: false,   // 告诉jQuery不要设置类型
+                success(data) {
+                    // 上传成功，进行回显
+                    let imgDom = $(`
+                        <div class="img">
+                            <div class="inner">
+                                <div class="cover success"></div>
+                                <div class="info success">上传成功</div>
+                                <img src="${src}" alt="NO IMG">
+                            </div>
+                        </div>   
+                    `);
+                    $(imageDom).find(".upload-display").empty().append(imgDom);
+                    // 执行成功方法
+                    paramObj.success !== undefined && paramObj.success(data);
+                },
+                error(message, ...optionalParams) {
+                    // 上传失败，进行回显
+                    let imgDom = $(`
+                        <div class="img">
+                            <div class="inner">
+                                <div class="cover error"></div>
+                                <div class="info error">上传失败</div>
+                                <img src="${src}" alt="NO IMG">
+                            </div>
+                        </div>   
+                    `);
+                    $(imageDom).find(".upload-display").empty().append(imgDom);
+                    // 执行失败方法
+                    paramObj.error !== undefined && paramObj.error(0, message);
+                }
+            });
+        }
+    });
+}
+
+
+/**
+ * 处理多个图片上传
+ * @param imageDom
+ * @param paramObj
+ */
+function dealWithImgUploadMultiply(imageDom, paramObj) {
+    $(imageDom).find("input[type=file]").change(function () {
+        // 获取用户上传的图片信息
+        let filesObj = $(this).get(0).files;
+        let fileObjArr = Object.values(filesObj);
+        // 如果用户没有选择文件，不做处理
+        if (fileObjArr.length <= 0) {
+            return;
+        }
+        // 检测是否超过了同时上传文件的限制
+        if (paramObj.parallelNum !== -1 && paramObj.parallelNum < fileObjArr.length) {
+            // 执行失败方法
+            paramObj.error !== undefined && paramObj.error(3, "文件数量超过了限制");
+            return;
+        }
+        let formData = new FormData();
+        // 检测上传的图片是否符合规范
+        fileObjArr.forEach((fileObj) => {
+            // 进行图片检测，是否符合上传规范
+            if (!imageUploadCheckCommon(paramObj, fileObj, formData)) {
+                // 上传的图片不符合规范
+                return null;
+            }
+        });
+        // 所有的图片都符合规范，进行回显
+        let successEcho = '';
+        let errorEcho = '';
+        fileObjArr.forEach((fileObj) => {
+            let src = URL.createObjectURL(fileObj);
+            successEcho += `
+                <div class="img">
+                    <div class="inner">
+                        <div class="cover success"></div>
+                        <div class="info success">上传成功</div>
+                        <img src="${src}" alt="NO IMG">
+                    </div>
+                </div>  
+            `;
+            errorEcho += `
+                <div class="img">
+                    <div class="inner">
+                        <div class="cover error"></div>
+                        <div class="info error">上传失败</div>
+                        <img src="${src}" alt="NO IMG">
+                    </div>
+                </div>  
+            `;
+        });
+        // 发送ajax请求
         $.ajax({
             url: paramObj.url,
             type: paramObj.method,
@@ -118,36 +215,44 @@ function dealWithImgUpload(imageDom, paramObj) {
             contentType: false,   // 告诉jQuery不要设置类型
             success(data) {
                 // 上传成功，进行回显
-                let imgDom = $(`
-                    <div class="img">
-                        <div class="inner">
-                            <div class="cover success"></div>
-                            <div class="info success">上传成功</div>
-                            <img src="${src}" alt="NO IMG">
-                        </div>
-                    </div>   
-                `);
-                $(imageDom).find(".upload-display").empty().append(imgDom);
+                $(imageDom).find(".upload-display").empty().append(successEcho);
                 // 执行成功方法
                 paramObj.success !== undefined && paramObj.success(data);
             },
             error(message, ...optionalParams) {
                 // 上传失败，进行回显
-                let imgDom = $(`
-                    <div class="img">
-                        <div class="inner">
-                            <div class="cover error"></div>
-                            <div class="info error">上传失败</div>
-                            <img src="${src}" alt="NO IMG">
-                        </div>
-                    </div>   
-                `);
-                $(imageDom).find(".upload-display").empty().append(imgDom);
+                $(imageDom).find(".upload-display").empty().append(errorEcho);
                 // 执行失败方法
                 paramObj.error !== undefined && paramObj.error(0, message);
             }
         });
     });
+}
+
+
+/**
+ * 进行图片上传检测
+ * @param paramObj
+ * @param fileObj
+ * @param formData
+ * @returns {boolean|*}
+ */
+function imageUploadCheckCommon(paramObj, fileObj, formData) {
+    // 检测上传图片是否符合要求
+    let surfixArr = fileObj.name.split('.');
+    let surfix = surfixArr[surfixArr.length - 1];
+    if (paramObj.acceptFile.indexOf(surfix.toLowerCase()) === -1) {
+        // 不是图片类型
+        paramObj.error !== undefined && paramObj.error(2, "请上传图片");
+        return false;
+    }
+    if (paramObj.maxSize !== -1 && paramObj.maxSize < fileObj.size / 1024) {
+        paramObj.error !== undefined && paramObj.error(1, "图片过大");
+        return false;
+    }
+    // 封装上传信息
+    formData.append(paramObj.fileName, fileObj);
+    return true;
 }
 
 
@@ -170,14 +275,27 @@ function defaultFileParam(paramObj) {
 
 
 /**
- * 处理文件上传(自动上传)
+ * 单文件上传
  * @param fileDom
  * @param paramObj
  */
-function dealWithFileUpload(fileDom, paramObj) {
+function dealWithSingleFileUpload(fileDom, paramObj) {
+    if (paramObj.autoUpload) {    // 自动上传
+        singleFileUploadAuto(fileDom, paramObj);
+    } else {       // 非自动上传
+        singleFileUploadWithoutAuto(fileDom, paramObj);
+    }
+}
+
+// 单文件上传 - 自动上传
+function singleFileUploadAuto(fileDom, paramObj) {
     $(fileDom).find("input[type=file]").change(function () {
         // 获取用户上传的文件信息
         let fileObj = $(this).get(0).files[0];
+        // 如果用户没有做选择
+        if (!fileObj) {
+            return;
+        }
         // 初始化进度条
         $(fileDom).find(".progress-bar .color").css("width", '0');
         fileUploadCommon(paramObj, fileObj, fileDom, (data) => {
@@ -211,15 +329,15 @@ function dealWithFileUpload(fileDom, paramObj) {
 }
 
 
-/**
- * 处理文件上传(非自动上传)
- * @param fileDom
- * @param paramObj
- */
-function dealWithFileUploadWithoutAuto(fileDom, paramObj) {
+// 单文件上传 - 非自动上传
+function singleFileUploadWithoutAuto(fileDom, paramObj) {
     $(fileDom).find("input[type=file]").change(function () {
         // 获取用户上传的文件信息
         let fileObj = $(this).get(0).files[0];
+        // 如果用户没有做选择
+        if (!fileObj) {
+            return;
+        }
         // 将文件名显示在页面上
         let fileInfo = $(`
             <div class="file-name">
@@ -247,6 +365,133 @@ function dealWithFileUploadWithoutAuto(fileDom, paramObj) {
                     <div class="icon error"></div>
                 `);
             });
+        });
+    });
+}
+
+
+/**
+ * 多文件上传
+ * @param fileDom
+ * @param paramObj
+ */
+function dealWithMultiplyFileUpload(fileDom, paramObj) {
+    if (paramObj.autoUpload) {
+        multiplyFileUploadAuto(fileDom, paramObj);
+    } else {
+        multiplyFileUploadWithoutAuto(fileDom, paramObj);
+    }
+}
+
+
+// 多文件上传 - 自动上传
+function multiplyFileUploadAuto(fileDom, paramObj) {
+    $(fileDom).find("input[type=file]").change(function () {
+        // 获取用户上传的文件信息
+        let filesObj = $(this).get(0).files;
+        // 将文件对象转换成数组
+        let fileObjArr = Object.values(filesObj);
+        // 用户没有选择文件
+        if (fileObjArr.length <= 0) {
+            return;
+        }
+        // 检测是否超过了同时上传文件的限制
+        if (paramObj.parallelNum !== -1 && paramObj.parallelNum < fileObjArr.length) {
+            // 执行失败方法
+            paramObj.error !== undefined && paramObj.error(3, "文件数量超过了限制");
+            return;
+        }
+        // 一个一个上传
+        // 清空显示区域
+        $(fileDom).find(".file-upload-display .file-name").remove();
+        fileObjArr.forEach((fileObj) => {
+            // 初始化进度条
+            $(fileDom).find(".progress-bar .color").css("width", '0');
+            fileUploadCommon(paramObj, fileObj, fileDom, (data) => {
+                // 上传成功，进行回显
+                let successDom = $(`
+                    <div class="file-name">
+                        <div class="word">
+                            ${fileObj.name}
+                        </div>
+                        <div class="status-item-success">上传成功</div>
+                        <div class="icon success"></div>
+                    </div>
+                `);
+                $(fileDom).find(".file-upload-display").append(successDom);
+            }, (data) => {
+                // 上传失败，进行回显
+                let errorDom = $(`
+                    <div class="file-name">
+                        <div class="word">
+                            ${fileObj.name}
+                        </div>
+                        <div class="status-item-error">上传失败</div>
+                        <div class="icon error"></div>
+                    </div>
+                `);
+                $(fileDom).find(".file-upload-display").append(errorDom);
+            });
+        });
+        // 清空input的内容
+        $(this).val('');
+    });
+}
+
+
+// 多文件上传 - 非自动上传
+function multiplyFileUploadWithoutAuto(fileDom, paramObj) {
+    $(fileDom).find("input[type=file]").change(function () {
+        // 获取用户上传的文件信息
+        let filesObj = $(this).get(0).files;
+        // 将文件对象转换成数组
+        let fileObjArr = Object.values(filesObj);
+        // 用户没有选择文件
+        if (fileObjArr.length <= 0) {
+            return;
+        }
+        // 检测是否超过了同时上传文件的限制
+        if (paramObj.parallelNum !== -1 && paramObj.parallelNum < fileObjArr.length) {
+            // 执行失败方法
+            paramObj.error !== undefined && paramObj.error(3, "文件数量超过了限制");
+            return;
+        }
+        // 将文件名显示在页面上
+        $(fileDom).find(".file-upload-display .file-name").remove();
+        $(fileDom).find(".progress-bar .color").css("width", '0');
+        fileObjArr.forEach((fileObj) => {
+            let fileInfo = $(`
+                <div class="file-name">
+                    <div class="word">
+                        ${fileObj.name}
+                    </div>
+                </div>
+            `);
+            // 刷新显示区域
+            $(fileDom).find(".file-upload-display").append(fileInfo);
+        });
+        // 为上传按钮设置点击事件
+        $(fileDom).find("button.start-upload").unbind("click");
+        $(fileDom).find("button.start-upload").click(() => {
+            fileObjArr.forEach((fileObj, index) => {
+                fileUploadCommon(paramObj, fileObj, fileDom, (data) => {
+                    // 上传成功，进行回显
+                    // 找到指定的dom
+                    $(fileDom).find(`.file-upload-display .file-name:eq(${index})`).append(`
+                        <div class="status-item-success">上传成功</div>
+                        <div class="icon success"></div>
+                    `);
+                }, (data) => {
+                    // 上传失败，进行回显
+                    // 找到指定的dom
+                    $(fileDom).find(`.file-upload-display .file-name:eq(${index})`).append(`
+                        <div class="status-item-error">上传失败</div>
+                        <div class="icon error"></div>
+                    `);
+                });
+            });
+            // 清空input的内容
+            $(fileDom).find("input[type=file]").val('');
         });
     });
 }
