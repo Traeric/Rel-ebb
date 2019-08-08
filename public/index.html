@@ -126,30 +126,34 @@ param:
 文件上传 <br>
 param:
 <div class="file-upload">
-        <FileUpload param="fileParam"></FileUpload>
-<!--    <div class="rel-ebb-img-upload">-->
-<!--        <div class="upload-button">-->
-<!--            <input class="upload-input" type="file" name="image" title="">-->
+<!--        <FileUpload param="fileParam"></FileUpload>-->
+    <div class="rel-ebb-img-upload">
+        <div class="upload-button">
+            <input class="upload-input drag-input" type="file" name="image" title="">
 <!--            <button class="file-button upload">选择文件</button>-->
-<!--        </div>-->
-<!--        <div class="file-upload-display">-->
-<!--            <div class="status uploading">正在上传</div>-->
-<!--            <div class="file-name">-->
-<!--                <div class="word">-->
-<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
-<!--                </div>-->
-<!--                <div class="status-item-success">上传成功</div>-->
-<!--                <div class="icon success"></div>-->
-<!--            </div>-->
-<!--            <div class="file-name">-->
-<!--                <div class="word">-->
-<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
-<!--                </div>-->
-<!--                <div class="status-item-error">上传失败</div>-->
-<!--                <div class="icon error"></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+            <div class="drag-area">
+                <div class="icon"></div>
+                <div class="text">请点击上传文件，或者将要上传的文件拖到此处</div>
+            </div>
+        </div>
+        <div class="file-upload-display">
+            <div class="status uploading">正在上传</div>
+            <div class="file-name">
+                <div class="word">
+                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg
+                </div>
+                <div class="status-item-success">上传成功</div>
+                <div class="icon success"></div>
+            </div>
+            <div class="file-name">
+                <div class="word">
+                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg
+                </div>
+                <div class="status-item-error">上传失败</div>
+                <div class="icon error"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
