@@ -98,8 +98,9 @@
 <h2>ImgUpload</h2>
 图片上传 <br>
 param:
+type
 <div class="img-upload">
-    <ImgUpload param="imgParam"></ImgUpload>
+    <ImgUpload param="imgParam" type="drag"></ImgUpload>
     <!--    <div class="rel-ebb-img-upload">-->
     <!--        <div class="upload-button">-->
     <!--            <input class="upload-input" type="file" name="image" title="">-->
@@ -125,35 +126,38 @@ param:
 <h2>FileUpload</h2>
 文件上传 <br>
 param:
+type:
 <div class="file-upload">
-<!--        <FileUpload param="fileParam"></FileUpload>-->
-    <div class="rel-ebb-img-upload">
-        <div class="upload-button">
-            <input class="upload-input drag-input" type="file" name="image" title="">
-<!--            <button class="file-button upload">选择文件</button>-->
-            <div class="drag-area">
-                <div class="icon"></div>
-                <div class="text">请点击上传文件，或者将要上传的文件拖到此处</div>
-            </div>
-        </div>
-        <div class="file-upload-display">
-            <div class="status uploading">正在上传</div>
-            <div class="file-name">
-                <div class="word">
-                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg
-                </div>
-                <div class="status-item-success">上传成功</div>
-                <div class="icon success"></div>
-            </div>
-            <div class="file-name">
-                <div class="word">
-                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg
-                </div>
-                <div class="status-item-error">上传失败</div>
-                <div class="icon error"></div>
-            </div>
-        </div>
-    </div>
+        <FileUpload param="fileParam" type="drag"></FileUpload>
+<!--    <div class="rel-ebb-img-upload">-->
+<!--        <div class="upload-button">-->
+<!--            <input class="upload-input drag-input" type="file" name="image" title="">-->
+<!--&lt;!&ndash;            <button class="file-button upload">选择文件</button>&ndash;&gt;-->
+<!--            <div class="drag-area">-->
+<!--                <div class="icon">-->
+<!--                    <div class="img"></div>-->
+<!--                </div>-->
+<!--                <div class="text">请点击上传，或者拖拽文件到此处</div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="file-upload-display">-->
+<!--            <div class="status uploading">正在上传</div>-->
+<!--            <div class="file-name">-->
+<!--                <div class="word">-->
+<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
+<!--                </div>-->
+<!--                <div class="status-item-success">上传成功</div>-->
+<!--                <div class="icon success"></div>-->
+<!--            </div>-->
+<!--            <div class="file-name">-->
+<!--                <div class="word">-->
+<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
+<!--                </div>-->
+<!--                <div class="status-item-error">上传失败</div>-->
+<!--                <div class="icon error"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 
 <script>
@@ -221,7 +225,7 @@ param:
             timeout: 3000,     //
             // acceptFile: "[]",   //
             refuseFile: "['zip', 'tar']",   //
-            autoUpload: false,
+            autoUpload: true,
             success(data) {
                 console.log(data);
             },

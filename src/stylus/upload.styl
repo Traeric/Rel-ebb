@@ -46,21 +46,31 @@
         border-color #adadad
 
 
-
     .drag-area
-      background-color #fb7299
-      width 300px
+      border 1px dashed #e2e2e2
+      border-radius 4px
+      width 280px
       height 120px
       display flex
       flex-wrap wrap
       justify-content space-around
+      cursor pointer
+
       .icon
         width 100%
-        height 90px
+        display flex
+        align-items center
+        justify-content center
+
+        .img
+          width 60px
+          height 40px
+          background-size 60px 40px
+          background-image: url("../../assets/images/upload-cloud.png")
+
       .text
         width 100%
-        color #ccc
-        font-size 14px
+        color #999
         text-align center
 
   .upload-display
