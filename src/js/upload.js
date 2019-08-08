@@ -1,21 +1,38 @@
 $(function () {
     // 获取ImgUpload标签
     let imgUpload = $("ImgUpload");
-
     if (imgUpload.length > 0) {
         imgUpload.each((index, image) => {
             // 获取参数
             let paramFunc = $(image).attr("param");
+            let type = $(image).attr("type") || 'click';
 
+            // 处理默认参数
             let paramObj = eval(paramFunc)();
             paramObj = defaultImgParam(paramObj);
-            // 处理默认参数
 
+            // 处理拖拽上传的样式
+            let uploadDom = '';
+            if (type === "click") {
+                uploadDom = `
+                    <input class="upload-input" type="file" title="" ${paramObj.uploadMultiple ? 'multiple' : ''}>
+                    <button class="upload">选择图片</button>
+                `;
+            } else if (type === 'drag') {
+                uploadDom = `
+                    <input class="upload-input" type="file" title="" ${paramObj.uploadMultiple ? 'multiple' : ''} style="width: 0; height: 0;">
+                    <div class="drag-area">
+                        <div class="icon">
+                            <div class="img"></div>
+                        </div>
+                        <div class="text">请点击上传，或者拖拽文件到此处</div>
+                    </div>
+                `;
+            }
             let imageDom = $(`
                 <div class="rel-ebb-img-upload">
                     <div class="upload-button">
-                        <input class="upload-input" type="file" title="" ${paramObj.uploadMultiple ? 'multiple' : ''}>
-                        <button class="upload">选择图片</button>
+                        ${uploadDom}
                     </div>
                     <div class="upload-display"></div>
                 </div>
@@ -30,6 +47,8 @@ $(function () {
                 // 单图片上传
                 dealWithImgUpload(imageDom, paramObj);
             }
+            // 拖拽上传
+            dragUpload(imageDom, paramObj, type);
         });
     }
 
@@ -39,16 +58,35 @@ $(function () {
         fileUpload.each((index, file) => {
             // 获取参数
             let paramFunc = $(file).attr('param');
-            let paramObj = eval(paramFunc)();
+            let type = $(file).attr("type") || 'click';
+
             // 初始化对象
+            let paramObj = eval(paramFunc)();
             paramObj = defaultFileParam(paramObj);
 
+            // 处理拖拽上传的样式
+            let uploadDom = '';
+            if (type === "click") {
+                uploadDom = `
+                    <input class="upload-input" type="file" title="" ${paramObj.uploadMultiple ? 'multiple' : ''}>
+                    <button class="file-button upload">选择文件</button>
+                    ${paramObj.autoUpload ? '' : '<button class="start-upload">开始上传</button>'}
+                `;
+            } else if (type === 'drag') {
+                uploadDom = `
+                    <input class="upload-input" type="file" title="" ${paramObj.uploadMultiple ? 'multiple' : ''} style="width: 0; height: 0;">
+                    <div class="drag-area">
+                        <div class="icon">
+                            <div class="img"></div>
+                        </div>
+                        <div class="text">请点击上传，或者拖拽文件到此处</div>
+                    </div>
+                `;
+            }
             let fileDom = $(`
                 <div class="rel-ebb-img-upload">
                     <div class="upload-button">
-                        <input class="upload-input" type="file" title="" ${paramObj.uploadMultiple ? 'multiple' : ''}>
-                        <button class="file-button upload">选择文件</button>
-                        ${paramObj.autoUpload ? '' : '<button class="start-upload">开始上传</button>'}
+                        ${uploadDom}
                     </div>
                     <div class="file-upload-display">
                         <div class="progress-bar">
@@ -68,6 +106,8 @@ $(function () {
                 // 单文件上传
                 dealWithSingleFileUpload(fileDom, paramObj);
             }
+            // 拖拽上传
+            dragUpload(fileDom, paramObj, type);
         });
     }
 });
@@ -579,3 +619,30 @@ function fileUploadCommon(paramObj, fileObj, fileDom, successCallback, errorCall
 }
 
 
+/**
+ * 处理拖拽上传
+ * @param dom
+ * @param paramObj
+ * @param type
+ */
+function dragUpload(dom, paramObj, type) {
+    if (type === "drag") {
+        let dragDom = $(dom).find(".drag-area").get(0);
+        dragDom.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+        dragDom.addEventListener("drop", (e) => {
+            e.preventDefault();
+            // 获取文件对象
+            $(dom).find("input").get(0).files = e.dataTransfer.files;
+            // 初始化change事件
+            let event = document.createEvent("HTMLEvents");
+            event.initEvent("change", true, true);
+            // 触发input=change事件
+            $(dom).find("input").get(0).dispatchEvent(event);
+        });
+        $(dragDom).click(() => {
+            $(dom).find("input").get(0).click();
+        });
+    }
+}
