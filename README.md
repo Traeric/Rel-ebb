@@ -161,6 +161,63 @@ return {
 | :-------: | :----: | :-------: | :------: | :------------: |
 | photoName | string | "rel-ebb" |    否    | 拍照下载的图片 |
 
+# 文件上传&图片上传
+
+## 图片上传
+
+用来上传图片的标签是<ImgUpload></ImgUpload>
+
+### 参数说明
+
+| 属性  |  类型  | 默认值  | 是否必须 |                             说明                             |
+| :---: | :----: | :-----: | :------: | :----------------------------------------------------------: |
+| param | string |   无    |    是    | 该参数传入一个方法名。该方法由自己定义，在方法中对上传图片的信息进行配置 |
+| type  | string | 'click' |    否    | 上传图片的类型，可以点击也可以拖拽上传，有'click'跟'drag'两种类型 |
+
+如果选择'click'，效果图如下
+
+![1565405908460](G:\Rel-ebb\photo\2.png)
+
+如果选择drag，效果图如下
+
+![1565405979909](G:\Rel-ebb\photo\3.png)
+
+### 上传设置
+
+在标签中有一个param参数，里面可以写一个方法，该方法由自己定义，需要返回一个对象
+
+例如;
+
+```js
+<ImgUpload param="imgParam" type="drag"></ImgUpload>
+
+function imgParam() {
+    return {
+        url: "http://127.0.0.1:8888/img",
+        method: "post",
+        maxSize: "1024",   // kb
+        fileName: "file",
+        uploadMultiple: false,
+        parallelNum: 2,
+        timeout: 3000,
+        success(data) {
+            alert(data);
+        },
+        error(code, msg) {
+            alert(code);
+            alert(msg);
+        },
+    };
+}
+```
+
+#### 参数说明
+
+| 参数 |  类型  | 默认值 | 是否必须 |      说明      |
+| :--: | :----: | :----: | :------: | :------------: |
+| url  | string |   ""   |    是    | 图片上传的地址 |
+|      |        |        |          |                |
+
 
 
 
