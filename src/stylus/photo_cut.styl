@@ -1,0 +1,43 @@
+.rel-ebb-photo-cut
+  width 100%
+  height 100%
+
+  .rel-ebb-bg
+    display flex
+    align-items center
+    justify-content center
+    position relative
+    width 100%
+    height 100%
+    background-image url("../../assets/images/transparent.png")
+
+    img
+      max-width 100%
+      max-height 100%
+
+    .rel-ebb-shadow
+      display flex
+      justify-content center
+      align-items center
+      position absolute
+      top 0
+      left 0
+      width 100%
+      height 100%
+      background-color rgba(0, 0, 0, .3)
+      cursor crosshair
+      user-select none
+
+      .cutting-area
+        width 100px
+        height 100px
+        position relative
+        div
+          position absolute
+        .cutting-line-up
+          top 0
+          left 0
+          width 100%
+          height 3px
+          background #fff url("../../assets/images/Jcrop.gif") top left repeat
+

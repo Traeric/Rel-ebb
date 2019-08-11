@@ -12,4 +12,6 @@ import "./js/camera";
 import "./stylus/upload.styl";
 import "./js/upload";
 
+import "./stylus/photo_cut.styl";
+
 
