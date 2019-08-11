@@ -33,6 +33,12 @@
         .file-upload {
             margin-bottom: 50px;
         }
+
+        .photo-cut {
+            width: 600px;
+            height: 350px;
+            margin-bottom: 50px;
+        }
     </style>
 </head>
 <body>
@@ -97,67 +103,48 @@
 文件上传插件
 <h2>ImgUpload</h2>
 图片上传 <br>
-param:
-type
+param: 上传图片的配置
+type: 上传图片样式，drag or click
 <div class="img-upload">
     <ImgUpload param="imgParam" type="drag"></ImgUpload>
-    <!--    <div class="rel-ebb-img-upload">-->
-    <!--        <div class="upload-button">-->
-    <!--            <input class="upload-input" type="file" name="image" title="">-->
-    <!--            <button class="upload">选择图片</button>-->
-    <!--        </div>-->
-    <!--        <div class="upload-display">-->
-    <!--            <div class="img">-->
-    <!--                <div class="inner">-->
-    <!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
-    <!--                         alt="NO IMG">-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--            <div class="img">-->
-    <!--                <div class="inner">-->
-    <!--                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3359634383,540379162&fm=26&gp=0.jpg"-->
-    <!--                         alt="NO IMG">-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
 </div>
 
 <h2>FileUpload</h2>
 文件上传 <br>
-param:
-type:
+param: 上传文件的配置
+type: 上传文件样式，drag or click
 <div class="file-upload">
     <FileUpload param="fileParam" type="click"></FileUpload>
-<!--    <div class="rel-ebb-img-upload">-->
-<!--        <div class="upload-button">-->
-<!--            <input class="upload-input drag-input" type="file" name="image" title="">-->
-<!--&lt;!&ndash;            <button class="file-button upload">选择文件</button>&ndash;&gt;-->
-<!--            <div class="drag-area">-->
-<!--                <div class="icon">-->
-<!--                    <div class="img"></div>-->
-<!--                </div>-->
-<!--                <div class="text">请点击上传，或者拖拽文件到此处</div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="file-upload-display">-->
-<!--            <div class="status uploading">正在上传</div>-->
-<!--            <div class="file-name">-->
-<!--                <div class="word">-->
-<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
-<!--                </div>-->
-<!--                <div class="status-item-success">上传成功</div>-->
-<!--                <div class="icon success"></div>-->
-<!--            </div>-->
-<!--            <div class="file-name">-->
-<!--                <div class="word">-->
-<!--                    JDFHDKJFHDKJSFKJDSFHDKJS.jpg-->
-<!--                </div>-->
-<!--                <div class="status-item-error">上传失败</div>-->
-<!--                <div class="icon error"></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+</div>
+
+<h1>PhotoCut</h1>
+图片裁剪 <br>
+<div class="photo-cut">
+<!--    <PhotoCut></PhotoCut>-->
+    <div class="rel-ebb-photo-cut">
+        <div class="rel-ebb-bg">
+            <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg"
+                 alt="NO IMG">
+            <div class="rel-ebb-shadow">
+                <div class="cutting-area">
+                    <div class="cutting-line-up"></div>
+                    <div class="cutting-line-down"></div>
+                    <div class="cutting-line-left"></div>
+                    <div class="cutting-line-right"></div>
+                    <div class="cutting-point-up"></div>
+                    <div class="cutting-point-down"></div>
+                    <div class="cutting-point-left"></div>
+                    <div class="cutting-point-right"></div>
+                    <div class="cutting-point-left-up"></div>
+                    <div class="cutting-point-left-down"></div>
+                    <div class="cutting-point-right-up"></div>
+                    <div class="cutting-point-right-down"></div>
+                    <div class="cutting-area-h"></div>
+                    <div class="cutting-area-v"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
