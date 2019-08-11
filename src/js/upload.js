@@ -120,7 +120,7 @@ $(function () {
 function defaultImgParam(paramObj) {
     paramObj.url = paramObj.url !== undefined ? paramObj.url : "";
     paramObj.method = paramObj.method !== undefined ? paramObj.method : "post";
-    paramObj.maxSize = paramObj.maxSize !== undefined ? parseInt(paramObj.maxSize) : 0;
+    paramObj.maxSize = paramObj.maxSize !== undefined ? parseInt(paramObj.maxSize) : -1;
     paramObj.fileName = paramObj.fileName !== undefined ? paramObj.fileName : "image";
     paramObj.uploadMultiple = paramObj.uploadMultiple !== undefined ? paramObj.uploadMultiple : false;
     paramObj.parallelNum = paramObj.parallelNum !== undefined ? paramObj.parallelNum : -1;

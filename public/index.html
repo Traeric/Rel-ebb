@@ -128,7 +128,7 @@ type
 param:
 type:
 <div class="file-upload">
-        <FileUpload param="fileParam" type="drag"></FileUpload>
+    <FileUpload param="fileParam" type="click"></FileUpload>
 <!--    <div class="rel-ebb-img-upload">-->
 <!--        <div class="upload-button">-->
 <!--            <input class="upload-input drag-input" type="file" name="image" title="">-->
@@ -198,7 +198,7 @@ type:
         return {
             url: "http://127.0.0.1:8888/img",
             method: "post",
-            maxSize: "1024",   // kb
+            maxSize: 1024,   // kb
             fileName: "file",
             uploadMultiple: false,
             parallelNum: 2,
@@ -218,14 +218,14 @@ type:
         return {
             url: "http://127.0.0.1:8888/img",   //
             method: "post",   //
-            // maxSize: "1024",   // kb
+            // maxSize: 1024,   // kb
             fileName: "file",  //
             uploadMultiple: true,   //
             parallelNum: 2,
             timeout: 3000,     //
             // acceptFile: "[]",   //
             refuseFile: "['zip', 'tar']",   //
-            autoUpload: true,
+            autoUpload: false,
             success(data) {
                 console.log(data);
             },
