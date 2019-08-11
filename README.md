@@ -213,15 +213,104 @@ function imgParam() {
 
 #### 参数说明
 
-| 参数 |  类型  | 默认值 | 是否必须 |      说明      |
-| :--: | :----: | :----: | :------: | :------------: |
-| url  | string |   ""   |    是    | 图片上传的地址 |
-|      |        |        |          |                |
+|      参数      |   类型   | 默认值  | 是否必须 |                             说明                             |
+| :------------: | :------: | :-----: | :------: | :----------------------------------------------------------: |
+|      url       |  string  |   ""    |    是    |                        图片上传的地址                        |
+|     method     |  string  | "post"  |    否    |                        指定上传的方法                        |
+|    maxSize     |   int    |    0    |    否    |      图片上传的最大限制，默认为-1，即没有限制，单位是kb      |
+|    fileName    |  string  | "image" |    否    |                 上传图片的名称，默认为image                  |
+| uploadMultiple | boolean  |  false  |    否    |                     是否允许上传多张图片                     |
+|  parallelNum   |   int    |   -1    |    否    |                    允许同时上传的图片数量                    |
+|    timeout     |   int    |  30000  |    否    |                 上传超时时间，默认30000毫秒                  |
+|    success     | function |   无    |    否    | 上传成功后的回调方法，该函数有一个形参，是后端返回给前端的数据 |
+|     error      | function |   无    |    否    | 上传失败后的回调方法，该函数有两个形参，第一个是错误类型，第二个是错误信息 |
 
+##### 关于error函数的返回值类型
 
+* 0: 上传中的错误
+* 1: 上传图片过大
+* 2: 上传图片类型错误，即上传的不是图片，允许上传的类型有：["jpg", "gif", "png", "jpeg", "bmp", "tiff", "tga", "eps"]
+* 3: 上传图片的数量超过了限制
 
+## 文件上传
 
+用来上传文件的标签是：<FileUpload></FileUpload>	
 
+### 参数说明
+
+| 属性  |  类型  | 默认值  | 是否必须 |                             说明                             |
+| :---: | :----: | :-----: | :------: | :----------------------------------------------------------: |
+| param | string |   无    |    是    | 该参数传入一个方法名。该方法由自己定义，在方法中对上传图片的信息进行配置 |
+| type  | string | 'click' |    否    | 上传图片的类型，可以点击也可以拖拽上传，有'click'跟'drag'两种类型 |
+
+选择"click"和"drag"的样式与图片上传的一致
+
+### 上传设置
+
+在FileUpload标签的param参数中也可以写一个方法，该方法由自己定义，返回一个对象，对象里面定义对上传文件的一些设置
+
+例如：
+
+```javascript
+<FileUpload param="fileParam" type="click"></FileUpload>
+
+function fileParam() {
+    return {
+        url: "http://127.0.0.1:8888/img",   
+        method: "post",   
+        maxSize: 1024,   // kb
+        fileName: "file",  
+        uploadMultiple: true,   
+        parallelNum: 2,
+        timeout: 3000,     
+        acceptFile: "['jpg', '7z']",   
+        refuseFile: "['zip', 'tar']",   
+        autoUpload: true,
+        success(data) {
+            console.log(data);
+        },
+        error(code, msg) {
+            console.log(code);
+            console.log(msg);
+        },
+    };
+}
+```
+
+#### 参数说明
+|      参数      |   类型   | 默认值 | 是否必须 |                             说明                             |
+| :------------: | :------: | :----: | :------: | :----------------------------------------------------------: |
+|      url       |  string  |   ""   |    是    |                        文件上传的地址                        |
+|     method     |  string  | "post" |    否    |                        指定上传的方法                        |
+|    maxSize     |   int    |   0    |    否    |      文件上传的最大限制，默认为-1，即没有限制，单位是kb      |
+|    fileName    |  string  | "file" |    否    |                  上传文件的名称，默认为file                  |
+| uploadMultiple | boolean  | false  |    否    |                     是否允许上传多个文件                     |
+|  parallelNum   |   int    |   -1   |    否    |                    允许同时上传的文件数量                    |
+|    timeout     |   int    | 30000  |    否    |                 上传超时时间，默认30000毫秒                  |
+|   acceptFile   |  string  |  ull   |    否    | 允许上传的文件，是一个字符串，里面是数组形式，例如："['jpg', '7z']" |
+|   refuseFile   |  string  |  null  |    否    | 不允许上传的文件，是一个字符串，里面是数组形式，例如："['zip', 'tar']" |
+|   autoUpload   | boolean  |  true  |    否    |                         是否自动上传                         |
+|    success     | function |   无   |    否    | 上传成功后的回调方法，该函数有一个形参，是后端返回给前端的数据 |
+|     error      | function |   无   |    否    | 上传失败后的回调方法，该函数有两个形参，第一个是错误类型，第二个是错误信息 |
+
+##### 关于error方法返回值类型
+
+- 0: 上传中的错误
+- 1: 上传文件过大
+- 2: 上传文件类型错误，即上传的不是允许被上传的文件
+- 3: 上传文件的数量超过了限制
+
+##### autoUpload自动上传的说明
+
+autoUpload有两个值，true或者false
+
+当为true时是自动上传，只有一个上传按钮
+
+![NO IMG](./photo/4.png)
+
+当为false时是非自动上传，有两个按钮
+
+![NO IMG](./photo/5.png)
 
 
 
