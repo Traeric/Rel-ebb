@@ -13,5 +13,6 @@ import "./stylus/upload.styl";
 import "./js/upload";
 
 import "./stylus/photo_cut.styl";
+import "./js/photo_cut";
 
 
