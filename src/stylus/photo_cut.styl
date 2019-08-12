@@ -28,116 +28,125 @@
       cursor crosshair
       user-select none
 
-      .cutting-area
-        width 100px
-        height 100px
+      .img-frame
         position relative
-        cursor move
-        display flex
-        justify-content center
-        align-items center
 
-        div
+        .cutting-area
           position absolute
 
-        .cutting-line-up
-          top 0
-          left 0
-          width 100%
-          height 1px
-          background #fff url("../../assets/images/Jcrop.gif") top left repeat
-          cursor n-resize
+          .position
+            width 100%
+            height 100%
+            position relative
+            cursor move
+            display flex
+            justify-content center
+            align-items center
 
-        .cutting-line-down
-          bottom 0
-          left 0
-          width 100%
-          height 1px
-          background #fff url("../../assets/images/Jcrop.gif") top left repeat
-          cursor s-resize
+          div
+            position absolute
 
-        .cutting-line-left
-          top 0
-          left 0
-          width 1px
-          height 100%
-          background #fff url("../../assets/images/Jcrop.gif") top left repeat
-          cursor e-resize
+          .cutting-line-up
+            top 0
+            left 0
+            width 100%
+            height 1px
+            background #fff url("../../assets/images/Jcrop.gif") top left repeat
+            cursor n-resize
 
-        .cutting-line-right
-          top 0
-          right 0
-          width 1px
-          height 100%
-          background #fff url("../../assets/images/Jcrop.gif") top left repeat
-          cursor w-resize
+          .cutting-line-down
+            bottom 0
+            left 0
+            width 100%
+            height 1px
+            background #fff url("../../assets/images/Jcrop.gif") top left repeat
+            cursor s-resize
 
-        .cutting-point
-          width 8px
-          height 8px
-          background-color #000 !important
+          .cutting-line-left
+            top 0
+            left 0
+            width 1px
+            height 100%
+            background #fff url("../../assets/images/Jcrop.gif") top left repeat
+            cursor e-resize
 
-        .cutting-point-up
-          top -4px
-          left calc(50% - 4px)
-          cursor n-resize
-          z-index 10
+          .cutting-line-right
+            top 0
+            right 0
+            width 1px
+            height 100%
+            background #fff url("../../assets/images/Jcrop.gif") top left repeat
+            cursor w-resize
 
-        .cutting-point-down
-          bottom -4px
-          left calc(50% - 4px)
-          cursor n-resize
-          z-index 10
+          .cutting-point
+            width 8px
+            height 8px
+            background-color #000 !important
 
-        .cutting-point-left
-          left -4px
-          top calc(50% - 4px)
-          cursor w-resize
-          z-index 10
+          .cutting-point-up
+            top -4px
+            left calc(50% - 4px)
+            cursor n-resize
+            z-index 10
 
-        .cutting-point-right
-          right -4px
-          top calc(50% - 4px)
-          cursor w-resize
-          z-index 10
+          .cutting-point-down
+            bottom -4px
+            left calc(50% - 4px)
+            cursor n-resize
+            z-index 10
 
-        .cutting-point-left-up
-          left -4px
-          top -4px
-          cursor nw-resize
-          z-index 10
+          .cutting-point-left
+            left -4px
+            top calc(50% - 4px)
+            cursor w-resize
+            z-index 10
 
-        .cutting-point-left-down
-          left -4px
-          bottom -4px
-          cursor sw-resize
-          z-index 10
+          .cutting-point-right
+            right -4px
+            top calc(50% - 4px)
+            cursor w-resize
+            z-index 10
 
-        .cutting-point-right-up
-          right -4px
-          top -4px
-          cursor ne-resize
+          .cutting-point-left-up
+            left -4px
+            top -4px
+            cursor nw-resize
+            z-index 10
 
-        .cutting-point-right-down
-          z-index 10
-          right -4px
-          bottom -4px
-          cursor se-resize
+          .cutting-point-left-down
+            left -4px
+            bottom -4px
+            cursor sw-resize
+            z-index 10
 
-        .cutting-area-h
-          height 33.3333%
-          width 100%
-          border 1px dashed #aaa
+          .cutting-point-right-up
+            right -4px
+            top -4px
+            cursor ne-resize
+            z-index 10
 
-        .cutting-area-v
-          width 33.333%
-          height 100%
-          border 1px dashed #aaa
+          .cutting-point-right-down
+            z-index 10
+            right -4px
+            bottom -4px
+            cursor se-resize
 
-        .img-display
-          width calc(100% - 2px)
-          height calc(100% - 2px)
-          background-image url("https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg")
+          .cutting-area-h
+            height 33.3333%
+            width 100%
+            border 1px dashed #aaa
+            z-index 100
 
-          
+          .cutting-area-v
+            width 33.333%
+            height 100%
+            border 1px dashed #aaa
+            z-index 100
+
+          .img-display
+            width calc(100% - 2px)
+            height calc(100% - 2px)
+            background-image url("https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg")
+
+
 
