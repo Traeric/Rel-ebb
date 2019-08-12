@@ -16,6 +16,12 @@ $(function () {
                                         <div class="cutting-line-down"></div>
                                         <div class="cutting-line-left"></div>
                                         <div class="cutting-line-right"></div>
+                                        
+                                        <div class="cutting-line-up resize-line-up"></div>
+                                        <div class="cutting-line-down resize-line-down"></div>
+                                        <div class="cutting-line-left resize-line-left"></div>
+                                        <div class="cutting-line-right resize-line-right"></div>
+                                        
                                         <div class="cutting-point-up cutting-point"></div>
                                         <div class="cutting-point-down cutting-point"></div>
                                         <div class="cutting-point-left cutting-point"></div>
@@ -42,6 +48,8 @@ $(function () {
             styleInitialize(photoCutDom);
             // 移动剪切区域
             moveCuttingArea(photoCutDom);
+            // 重新调整截图区域的大小
+            resizeCuttingArea(photoCutDom);
         });
     }
 });
@@ -118,6 +126,40 @@ function moveCuttingArea(photoCutDom) {
     $(photoCutDom).find(".cutting-area").mouseleave(function (e) {
         // 移除移动事件
         $(this).unbind('mousemove');
+    });
+}
+
+
+/**
+ * 重新调整截图区域的大小
+ * @param photoCutDom
+ */
+function resizeCuttingArea(photoCutDom) {
+    $(photoCutDom).find(".resize-line-up").mousedown(function (e) {
+        let cuttingArea = $(photoCutDom).find(".cutting-area");
+        let startHeight = cuttingArea.height();
+        let imgFrame = $(photoCutDom).find(".img-frame");
+        let startMouseY = e.pageY;
+        let startTop = parseInt(cuttingArea.css('top').split("px")[0]);
+        $(this).mousemove((event) => {
+            // 取消移动事件
+            $(photoCutDom).find(".cutting-area").unbind('mousemove');
+            let moveY = event.pageY - startMouseY;
+            // 重新调整截图区域的大小
+            let height = startHeight - moveY;
+            // 限制大小
+            height = Math.max(0, height);
+            height = Math.min(imgFrame.height(), height);
+            // 调整截图区域的大小
+            $(cuttingArea).css({
+                height: height + 'px',
+                top: `${startTop + moveY}px`,
+            });
+        });
+    });
+
+    $(document).mouseup(() => {
+        $(photoCutDom).find(".resize-line-up").unbind('mousemove');
     });
 }
 
