@@ -105,6 +105,10 @@ function moveCuttingArea(photoCutDom) {
                 left: `${left}px`,
                 top: `${top}px`,
             });
+            // 将选框中的内容进行移动
+            $(photoCutDom).find(".img-display").css({
+                backgroundPosition: `-${left}px -${top}px`,
+            });
         });
     });
     $(photoCutDom).find(".cutting-area").mouseup(function (e) {
