@@ -72,7 +72,7 @@ module.exports = {
             },
             //暴露$和jQuery到全局
             {
-                test: require.resolve('jquery'), // require.resolve 用来获取模块的绝对路径
+                test: require.resolve('jquery'), // require.resolve 用来获取模块的绝对路�?
                 use: [{
                     loader: 'expose-loader',
                     options: 'jQuery'
@@ -83,7 +83,7 @@ module.exports = {
             },
             // 引入图片
             {
-                test: /\.(png|jpg)$/,
+                test: /\.(png|jpg|gif)$/,
                 use: [
                     {
                         loader: "url-loader",

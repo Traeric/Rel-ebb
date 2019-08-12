@@ -32,12 +32,74 @@
         width 100px
         height 100px
         position relative
+        cursor move
         div
           position absolute
         .cutting-line-up
           top 0
           left 0
           width 100%
-          height 3px
+          height 1px
           background #fff url("../../assets/images/Jcrop.gif") top left repeat
+          cursor n-resize
+        .cutting-line-down
+          bottom 0
+          left 0
+          width 100%
+          height 1px
+          background #fff url("../../assets/images/Jcrop.gif") top left repeat
+          cursor s-resize
+        .cutting-line-left
+          top 0
+          left 0
+          width 1px
+          height 100%
+          background #fff url("../../assets/images/Jcrop.gif") top left repeat
+          cursor e-resize
+        .cutting-line-right
+          top 0
+          right 0
+          width 1px
+          height 100%
+          background #fff url("../../assets/images/Jcrop.gif") top left repeat
+          cursor w-resize
+        .cutting-point
+          width 8px
+          height 8px
+          background-color rgba(0, 0, 0, .5)
+          border 1px solid #000
+        .cutting-point-up
+          top -4px
+          left calc(50% - 4px)
+          cursor n-resize
+        .cutting-point-down
+          bottom -4px
+          left calc(50% - 4px)
+          cursor n-resize
+        .cutting-point-left
+          left -4px
+          top calc(50% - 4px)
+          cursor w-resize
+        .cutting-point-right
+          right -4px
+          top calc(50% - 4px)
+          cursor w-resize
+        .cutting-point-left-up
+          left -4px
+          top -4px
+          cursor nw-resize
+        .cutting-point-left-down
+          left -4px
+          bottom -4px
+          cursor sw-resize
+        .cutting-point-right-up
+          right -4px
+          top -4px
+          cursor ne-resize
+        .cutting-point-right-down
+          right -4px
+          bottom -4px
+          cursor se-resize
+
+          
 
