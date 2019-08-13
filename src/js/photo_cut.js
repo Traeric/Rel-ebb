@@ -152,7 +152,7 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseY = e.pageY;
         let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
         let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
         });
     });
@@ -162,7 +162,7 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseY = e.pageY;
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
         let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
         });
     });
@@ -172,7 +172,7 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseX = e.pageX;
         let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
         let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left - 5;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
         });
     });
@@ -182,7 +182,7 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseX = e.pageX;
         let startRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
         let startLeft = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().left;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
         });
     });
@@ -196,7 +196,7 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseY = e.pageY;
         let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
         let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
             leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
         });
@@ -211,7 +211,7 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseY = e.pageY;
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
         let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
             downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
         });
@@ -226,7 +226,7 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseY = e.pageY;
         let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
         let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
             upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
         });
@@ -241,21 +241,14 @@ function resizeCuttingArea(photoCutDom) {
         let startMouseY = e.pageY;
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
         let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
-        $(this).mousemove((event) => {
+        $(document).mousemove((event) => {
             rightMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
             downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
         });
     });
     // 清除事件
     $(document).mouseup(() => {
-        $(photoCutDom).find(".resize-line-up").unbind('mousemove');
-        $(photoCutDom).find(".resize-line-down").unbind('mousemove');
-        $(photoCutDom).find(".resize-line-left").unbind('mousemove');
-        $(photoCutDom).find(".resize-line-right").unbind('mousemove');
-        $(photoCutDom).find(".cutting-point-left-up").unbind('mousemove');
-        $(photoCutDom).find(".cutting-point-left-down").unbind('mousemove');
-        $(photoCutDom).find(".cutting-point-right-up").unbind('mousemove');
-        $(photoCutDom).find(".cutting-point-right-down").unbind('mousemove');
+        $(document).unbind('mousemove');
     });
 }
 
