@@ -1,13 +1,16 @@
 .rel-ebb-photo-cut
   width 100%
   height 100%
+  display flex
+  justify-content space-between
+  align-items center
 
   .rel-ebb-bg
     display flex
     align-items center
     justify-content center
     position relative
-    width 100%
+    flex auto
     height 100%
     background-image url("../../assets/images/transparent.png")
 
@@ -172,5 +175,30 @@
             height calc(100% - 2px)
             background-image url("https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg")
 
+  .prev-and-btn
+    flex 0 0 100px
+    display flex
+    justify-content start
+    flex-direction column
+    height 100%
+
+    .prev-cut-img
+      height 100px
+      width 100px
+
+    .btn-group
+      display flex
+      justify-content center
+      .confirm
+        padding 8px 15px
+        cursor pointer
+        background-color #FFB800
+        border 1px solid #ffa535
+        color #fff
+        border-radius 4px
+
+        &:hover
+          color #FFB800
+          background-color #fff
 
 

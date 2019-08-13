@@ -9,19 +9,17 @@ $(function () {
                         <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg"
                              alt="NO IMG">
                         <div class="rel-ebb-shadow">
-                        <div class="img-frame">
+                            <div class="img-frame">
                                 <div class="cutting-area">
                                     <div class="position">
                                         <div class="cutting-line-up"></div>
                                         <div class="cutting-line-down"></div>
                                         <div class="cutting-line-left"></div>
                                         <div class="cutting-line-right"></div>
-                                        
                                         <div class="cutting-line-up resize-line-up"></div>
                                         <div class="cutting-line-down resize-line-down"></div>
                                         <div class="cutting-line-left resize-line-left"></div>
                                         <div class="cutting-line-right resize-line-right"></div>
-                                        
                                         <div class="cutting-point-up cutting-point"></div>
                                         <div class="cutting-point-down cutting-point"></div>
                                         <div class="cutting-point-left cutting-point"></div>
@@ -39,9 +37,14 @@ $(function () {
                             </div>
                         </div>
                     </div>
+                    <div class="prev-and-btn">
+                        <canvas class="prev-cut-img" width="100" height="100"></canvas>
+                        <div class="btn-group">
+                            <button class="confirm">确定</button>
+                        </div>
+                    </div>
                 </div>
             `);
-
             // 替换PhotoCut标签
             $(photoCut).replaceWith(photoCutDom);
             // 样式初始化
@@ -83,6 +86,12 @@ function styleInitialize(photoCutDom) {
             backgroundPosition: `${(imgWidth - 50) > 20 ? -25 : 0}px 
                                  ${(imgHeight - 50) > 20 ? -25 : 0}px`,
         });
+        // 图片裁剪预览
+        let startX = (imgWidth - 50) > 20 ? 25 : 0;
+        let startY = (imgHeight - 50) > 20 ? 25 : 0;
+        let areaWidth = $(photoCutDom).find(".cutting-area").width();
+        let areaHeight = $(photoCutDom).find(".cutting-area").height();
+        drawPrevImg(photoCutDom, this, startX, startY, areaWidth, areaHeight);
     });
 }
 
@@ -237,7 +246,7 @@ function resizeCuttingArea(photoCutDom) {
             downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
         });
     });
-
+    // 清除事件
     $(document).mouseup(() => {
         $(photoCutDom).find(".resize-line-up").unbind('mousemove');
         $(photoCutDom).find(".resize-line-down").unbind('mousemove');
@@ -408,5 +417,23 @@ function rightMove(event, photoCutDom, startMouseX, startRight, startLeft, start
     $(cuttingArea).css({
         right: `${right}px`,
     });
+}
+
+
+/**
+ * 进行图片预览
+ * @param photoCutDom
+ * @param imgDom
+ * @param startX
+ * @param startY
+ * @param imgWidth
+ * @param imgHeight
+ */
+function drawPrevImg(photoCutDom, imgDom, startX, startY, imgWidth, imgHeight) {
+    // 获取画布
+    let canvas = $(photoCutDom).find("canvas").get(0);
+    let ctx = canvas.getContext('2d');
+    // 获取图片
+    ctx.drawImage(imgDom, startX, startY, imgWidth, imgHeight, 0, 0, 100, 100);
 }
 
