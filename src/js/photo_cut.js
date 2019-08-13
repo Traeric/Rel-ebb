@@ -207,6 +207,21 @@ function resizeCuttingArea(photoCutDom) {
             downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
         });
     });
+    // 右上调整大小
+    $(photoCutDom).find(".cutting-point-right-up").mousedown(function (e) {
+        let startWidth = cuttingArea.width();
+        let startMouseX = e.pageX;
+        let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
+        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left - 5;
+        let startHeight = cuttingArea.height();
+        let startMouseY = e.pageY;
+        let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
+        let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
+        $(this).mousemove((event) => {
+            rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
+            upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
+        });
+    });
     // 右下调整大小
     $(photoCutDom).find(".cutting-point-right-down").mousedown(function (e) {
         let startWidth = cuttingArea.width();
@@ -218,7 +233,7 @@ function resizeCuttingArea(photoCutDom) {
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
         let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
         $(this).mousemove((event) => {
-            leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+            rightMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
             downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
         });
     });
@@ -230,6 +245,8 @@ function resizeCuttingArea(photoCutDom) {
         $(photoCutDom).find(".resize-line-right").unbind('mousemove');
         $(photoCutDom).find(".cutting-point-left-up").unbind('mousemove');
         $(photoCutDom).find(".cutting-point-left-down").unbind('mousemove');
+        $(photoCutDom).find(".cutting-point-right-up").unbind('mousemove');
+        $(photoCutDom).find(".cutting-point-right-down").unbind('mousemove');
     });
 }
 
