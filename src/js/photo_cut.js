@@ -1,4 +1,4 @@
-function start(e, refDom) {
+$(function () {
     // 获取PhotoCut标签
     let photoCutArr = $("PhotoCut");
     if (photoCutArr.length > 0) {
@@ -6,59 +6,107 @@ function start(e, refDom) {
             // 获取参数
             window.preViewClass = $(photoCut).attr("pre-view");  // 预览图类名
             window.confirmClass = $(photoCut).attr("confirm");  // 确认按钮类名
+            window.downloadClass = $(photoCut).attr('download');  // 下载按钮的类名
             window.inputId = $(photoCut).attr('input-id');  // 绑定的input标签的id
-            let ref = $(photoCut).attr("ref");
-            if (ref === refDom) {
-                // 获取图片的url
-                let imgSrc = URL.createObjectURL(e.currentTarget.files[0]);
-                let photoCutDom = $(`
-                    <div class="rel-ebb-photo-cut">
-                        <div class="rel-ebb-bg">
-                            <img src="${imgSrc}" alt="NO IMG">
-                            <div class="rel-ebb-shadow">
-                                <div class="img-frame">
-                                    <div class="cutting-area">
-                                        <div class="position">
-                                            <div class="cutting-line-up"></div>
-                                            <div class="cutting-line-down"></div>
-                                            <div class="cutting-line-left"></div>
-                                            <div class="cutting-line-right"></div>
-                                            <div class="cutting-line-up resize-line-up"></div>
-                                            <div class="cutting-line-down resize-line-down"></div>
-                                            <div class="cutting-line-left resize-line-left"></div>
-                                            <div class="cutting-line-right resize-line-right"></div>
-                                            <div class="cutting-point-up cutting-point"></div>
-                                            <div class="cutting-point-down cutting-point"></div>
-                                            <div class="cutting-point-left cutting-point"></div>
-                                            <div class="cutting-point-right cutting-point"></div>
-                                            <div class="cutting-point-left-up cutting-point"></div>
-                                            <div class="cutting-point-left-down cutting-point"></div>
-                                            <div class="cutting-point-right-up cutting-point"></div>
-                                            <div class="cutting-point-right-down cutting-point"></div>
-                                            <div class="cutting-area-h"></div>
-                                            <div class="cutting-area-v"></div>
-                                            <div class="click-area"></div>
-                                            <!-- 展示编辑后的图片 -->
-                                            <div class="img-display" style="background-image: url(${imgSrc});"></div>
-                                        </div>
+            window.imgName = $(photoCut).attr('img-name');  // 要下载的图片名称
+            // 获取图片的url
+            let photoCutDom = $(`
+                <div class="rel-ebb-photo-cut">
+                    <div class="rel-ebb-bg">
+                        <img alt="NO IMG">
+                        <div class="rel-ebb-shadow">
+                            <div class="img-frame">
+                                <div class="cutting-area">
+                                    <div class="position">
+                                        <div class="cutting-line-up"></div>
+                                        <div class="cutting-line-down"></div>
+                                        <div class="cutting-line-left"></div>
+                                        <div class="cutting-line-right"></div>
+                                        <div class="cutting-line-up resize-line-up"></div>
+                                        <div class="cutting-line-down resize-line-down"></div>
+                                        <div class="cutting-line-left resize-line-left"></div>
+                                        <div class="cutting-line-right resize-line-right"></div>
+                                        <div class="cutting-point-up cutting-point"></div>
+                                        <div class="cutting-point-down cutting-point"></div>
+                                        <div class="cutting-point-left cutting-point"></div>
+                                        <div class="cutting-point-right cutting-point"></div>
+                                        <div class="cutting-point-left-up cutting-point"></div>
+                                        <div class="cutting-point-left-down cutting-point"></div>
+                                        <div class="cutting-point-right-up cutting-point"></div>
+                                        <div class="cutting-point-right-down cutting-point"></div>
+                                        <div class="cutting-area-h"></div>
+                                        <div class="cutting-area-v"></div>
+                                        <div class="click-area"></div>
+                                        <!-- 展示编辑后的图片 -->
+                                        <div class="img-display"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <canvas></canvas>
                     </div>
-                `);
-                // 替换PhotoCut标签
-                $(photoCut).replaceWith(photoCutDom);
-                // 样式初始化
-                styleInitialize(photoCutDom);
-                // 移动剪切区域
-                moveCuttingArea(photoCutDom);
-                // 重新调整截图区域的大小
-                resizeCuttingArea(photoCutDom);
-            }
+                    <canvas></canvas>
+                    <a id="downloadA"></a>
+                    <div class="cover"></div>
+                </div>
+            `);
+            // 替换PhotoCut标签
+            $(photoCut).replaceWith(photoCutDom);
+            // 为对应的input-file设置change事件
+            changeEvenet(photoCutDom);
+            comfirmEvent();
+            downloadEvent(photoCutDom);
         });
     }
+});
+
+
+/**
+ * 为确认按钮设置点击事件
+ */
+function comfirmEvent() {
+    $(`.${window.confirmClass}`).click(() => {
+
+    });
+}
+
+
+/**
+ * 为确认按钮设置点击事件
+ * @param photoCutDom
+ */
+function downloadEvent(photoCutDom) {
+    $(`.${window.downloadClass}`).click(() => {
+        let img = $(photoCutDom).find('canvas').get(0).toDataURL('image/png');
+        let triggerDownload = $(photoCutDom).find("#downloadA")
+            .attr("href", img).attr("download", (window.imgName || "rel-ebb") + '.png');
+        triggerDownload[0].click();
+    });
+}
+
+
+/**
+ * 为PhotoCut标签对应的input标签设置绑定事件
+ * @param photoCutDom
+ */
+function changeEvenet(photoCutDom) {
+    $(`#${window.inputId}`).change(function (e) {
+        // 获取图片地址
+        let imgSrc = URL.createObjectURL(this.files[0]);
+        // 对图片类型进行检测
+        if (this.files[0].type.startsWith('image')) {
+            // 将图片放到裁剪框中
+            $(photoCutDom).find('img').attr('src', imgSrc);
+            $(photoCutDom).find('.img-display').css('background-image', `url(${imgSrc})`);
+            // 去掉遮罩层
+            $(photoCutDom).find(".cover").css('display', 'none');
+            // 样式初始化
+            styleInitialize(photoCutDom);
+            // 移动剪切区域
+            moveCuttingArea(photoCutDom);
+            // 重新调整截图区域的大小
+            resizeCuttingArea(photoCutDom);
+        }
+    });
 }
 
 
@@ -460,9 +508,14 @@ function drawPrevImg(photoCutDom, startX, startY, imgWidth, imgHeight) {
     let cutHeight = heightRate * imgHeight;
     // 获取要展示的图片的宽高，没有就以100像素展示
     let targetImg = $(`.${window.preViewClass}`);
-    targetImg.each((item) => {
+    targetImg.each((index, item) => {
         let targetImageWidth = $(item).width() || 100;
         let targetImageHeight = $(item).height() || 100;
+        // 设置画布的大小
+        $(photoCutDom).find('canvas').attr('width', targetImageWidth);
+        $(photoCutDom).find('canvas').attr('height', targetImageHeight);
+        console.log(targetImageWidth);
+        console.log(targetImageHeight);
         // 将裁剪后的图片布置在画布上
         ctx.drawImage(imgDom, startX * widthRate, startY * heightRate, cutWidth, cutHeight, 0, 0, targetImageWidth, targetImageHeight);
         // 获取图片url
