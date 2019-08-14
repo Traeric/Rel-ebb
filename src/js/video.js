@@ -291,37 +291,40 @@ function fullScreen(videoBoxDom) {
  * @param videoBoxDom
  */
 function voiceControlEvent(videoBoxDom) {
-    $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function () {
-        $(this).bind("mousemove", voiceControl);
+    $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function (e) {
+        let currentDom = e.currentTarget;
+        $(document).bind("mousemove", (e) => {
+            voiceControl(e, currentDom);
+        });
     });
 
     $(document).mouseup(function () {
-        $(videoBoxDom).find(".voice-panel .total .btn").unbind('mousemove', voiceControl);
+        $(document).unbind('mousemove', voiceControl);
     });
 
-    $(videoBoxDom).find(".voice-panel .total .btn").mouseleave(function () {
-        $(this).unbind('mousemove', voiceControl);
-    });
+    // $(videoBoxDom).find(".voice-panel .total .btn").mouseleave(function () {
+    //     $(this).unbind('mousemove', voiceControl);
+    // });
 }
 
-function voiceControl(e) {
+function voiceControl(e, currentDom) {
     // 获取鼠标的y轴的位置
     let mouseY = e.clientY;
     // 获取包裹音量条的顶部距离浏览器顶部的长度
-    let top = $(e.currentTarget).parents('.total').get(0).getBoundingClientRect().top;
+    let top = $(currentDom).parents('.total').get(0).getBoundingClientRect().top;
     // 设置音量条的位置
-    let totalHeight = $(e.currentTarget).parents('.total').height();
+    let totalHeight = $(currentDom).parents('.total').height();
     let percent = parseInt(((totalHeight - (mouseY - top)) / totalHeight) * 100 + '');
     // 限制大小
     percent = Math.max(0, percent);
     percent = Math.min(100, percent);
-    voiceBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent);
+    voiceBar($(currentDom).parents('.rel-ebb-video-box').get(0), percent);
 
     // 设置音量
     let voice = (totalHeight - (mouseY - top)) / totalHeight;
     voice = Math.max(0, voice);
     voice = Math.min(1, voice);
-    $(e.currentTarget).parents('.rel-ebb-video-box').find('video').get(0).volume = voice;
+    $(currentDom).parents('.rel-ebb-video-box').find('video').get(0).volume = voice;
 }
 
 function clickVoiceBar(videoBoxDom) {
@@ -371,41 +374,40 @@ function clickMute(videoBoxDom) {
  */
 function progressBarEvent(videoBoxDom) {
     let progressBtnDom = $(videoBoxDom).find('.rel-ebb-progress-bar .btn');
-    progressBtnDom.mousedown(function () {
-        $(this).mousemove(progressControl);
+    progressBtnDom.mousedown(function (e) {
+        let currentDom = e.currentTarget;
+        $(document).mousemove((e) => {
+            progressControl(e, currentDom);
+        });
     });
-    $(progressBtnDom).mouseup(function () {
-        $(this).unbind('mousemove', progressControl);
+    $(document).mouseup(function () {
+        $(document).unbind('mousemove', progressControl);
         $(videoBoxDom).find('video').get(0).play();
         $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
         $(videoBoxDom).find('.play .img').attr('title', '暂停');
         window.videoStart = true;
     });
-
-    progressBtnDom.mouseleave(function () {
-        $(this).unbind('mousemove', progressControl);
-    });
 }
 
 
-function progressControl(e) {
+function progressControl(e, currentDom) {
     // 获取鼠标x轴的位置
     let mouseX = e.clientX;
     // 获取进度条的位置信息
-    let progressBarInfo = $(e.currentTarget).parents('.bar').get(0).getBoundingClientRect();
+    let progressBarInfo = $(currentDom).parents('.bar').get(0).getBoundingClientRect();
     // 获取进度条左边的位置
     let left = progressBarInfo.left;
     // 获取进度条的长度
-    let progressBarLength = $(e.currentTarget).parents('.bar').width();
+    let progressBarLength = $(currentDom).parents('.bar').width();
     // 计算百分比
     let percent = (mouseX - left) / progressBarLength;
     // 限制百分比
     percent = Math.max(0, percent);
     percent = Math.min(1, percent);
     // 设置样式
-    progressBar($(e.currentTarget).parents('.rel-ebb-video-box').get(0), percent * 100);
+    progressBar($(currentDom).parents('.rel-ebb-video-box').get(0), percent * 100);
     // 设置视频进度
-    let videoDom = $(e.currentTarget).parents(".rel-ebb-video-box").find('video').get(0);
+    let videoDom = $(currentDom).parents(".rel-ebb-video-box").find('video').get(0);
     let duration = videoDom.duration;
     // 设置当前播放的进度
     videoDom.currentTime = duration * percent;
