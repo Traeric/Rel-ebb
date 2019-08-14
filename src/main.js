@@ -1,5 +1,7 @@
 import "jquery";
 
+import "./js/rel-ebb-class";
+
 import "./js/swiper";
 import "./stylus/swiper.styl";
 

@@ -1,56 +1,63 @@
-$(function () {
+export default function start(e, refDom) {
     // 获取PhotoCut标签
     let photoCutArr = $("PhotoCut");
     if (photoCutArr.length > 0) {
         photoCutArr.each((index, photoCut) => {
-            let photoCutDom = $(`
-                <div class="rel-ebb-photo-cut">
-                    <div class="rel-ebb-bg">
-                        <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg"
-                             alt="NO IMG">
-                        <div class="rel-ebb-shadow">
-                            <div class="img-frame">
-                                <div class="cutting-area">
-                                    <div class="position">
-                                        <div class="cutting-line-up"></div>
-                                        <div class="cutting-line-down"></div>
-                                        <div class="cutting-line-left"></div>
-                                        <div class="cutting-line-right"></div>
-                                        <div class="cutting-line-up resize-line-up"></div>
-                                        <div class="cutting-line-down resize-line-down"></div>
-                                        <div class="cutting-line-left resize-line-left"></div>
-                                        <div class="cutting-line-right resize-line-right"></div>
-                                        <div class="cutting-point-up cutting-point"></div>
-                                        <div class="cutting-point-down cutting-point"></div>
-                                        <div class="cutting-point-left cutting-point"></div>
-                                        <div class="cutting-point-right cutting-point"></div>
-                                        <div class="cutting-point-left-up cutting-point"></div>
-                                        <div class="cutting-point-left-down cutting-point"></div>
-                                        <div class="cutting-point-right-up cutting-point"></div>
-                                        <div class="cutting-point-right-down cutting-point"></div>
-                                        <div class="cutting-area-h"></div>
-                                        <div class="cutting-area-v"></div>
-                                        <div class="click-area"></div>
-                                        <!-- 展示编辑后的图片 -->
-                                        <div class="img-display"></div>
+            // 获取参数
+            window.preViewClass = $(photoCut).attr("pre-view");  // 预览图类名
+            window.confirmClass = $(photoCut).attr("confirm");  // 确认按钮类名
+            let ref = $(photoCut).attr("ref");
+            if (ref === refDom) {
+                let photoCutDom = $(`
+                    <div class="rel-ebb-photo-cut">
+                        <div class="rel-ebb-bg">
+                            <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg"
+                                 alt="NO IMG">
+                            <div class="rel-ebb-shadow">
+                                <div class="img-frame">
+                                    <div class="cutting-area">
+                                        <div class="position">
+                                            <div class="cutting-line-up"></div>
+                                            <div class="cutting-line-down"></div>
+                                            <div class="cutting-line-left"></div>
+                                            <div class="cutting-line-right"></div>
+                                            <div class="cutting-line-up resize-line-up"></div>
+                                            <div class="cutting-line-down resize-line-down"></div>
+                                            <div class="cutting-line-left resize-line-left"></div>
+                                            <div class="cutting-line-right resize-line-right"></div>
+                                            <div class="cutting-point-up cutting-point"></div>
+                                            <div class="cutting-point-down cutting-point"></div>
+                                            <div class="cutting-point-left cutting-point"></div>
+                                            <div class="cutting-point-right cutting-point"></div>
+                                            <div class="cutting-point-left-up cutting-point"></div>
+                                            <div class="cutting-point-left-down cutting-point"></div>
+                                            <div class="cutting-point-right-up cutting-point"></div>
+                                            <div class="cutting-point-right-down cutting-point"></div>
+                                            <div class="cutting-area-h"></div>
+                                            <div class="cutting-area-v"></div>
+                                            <div class="click-area"></div>
+                                            <!-- 展示编辑后的图片 -->
+                                            <div class="img-display"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <canvas></canvas>
                     </div>
-                </div>
-            `);
-            // 替换PhotoCut标签
-            $(photoCut).replaceWith(photoCutDom);
-            // 样式初始化
-            styleInitialize(photoCutDom);
-            // 移动剪切区域
-            moveCuttingArea(photoCutDom);
-            // 重新调整截图区域的大小
-            resizeCuttingArea(photoCutDom);
+                `);
+                // 替换PhotoCut标签
+                $(photoCut).replaceWith(photoCutDom);
+                // 样式初始化
+                styleInitialize(photoCutDom);
+                // 移动剪切区域
+                moveCuttingArea(photoCutDom);
+                // 重新调整截图区域的大小
+                resizeCuttingArea(photoCutDom);
+            }
         });
     }
-});
+}
 
 
 /**
@@ -61,6 +68,7 @@ function styleInitialize(photoCutDom) {
     let imgDom = $(photoCutDom).find("img");
     // 获取图片的宽高
     $(imgDom).on("load", function () {
+        $(this).attr("crossOrigin", 'Anonymous');
         let imgWidth = $(this).width();
         let imgHeight = $(this).height();
         // 设置截图区域的大小
@@ -335,7 +343,7 @@ function downMove(event, photoCutDom, startMouseY, startBottom, startTop, startH
         });
         // 调整预览图
         drawPrevImg(photoCutDom, $(cuttingArea).position().left,
-                    $(cuttingArea).position().top, $(cuttingArea).width(), height);
+            $(cuttingArea).position().top, $(cuttingArea).width(), height);
     }
     // 调整截图区域的大小
     $(cuttingArea).css({
@@ -448,9 +456,17 @@ function drawPrevImg(photoCutDom, startX, startY, imgWidth, imgHeight) {
     // 设置截图区域的真实大小
     let cutWidth = widthRate * imgWidth;
     let cutHeight = heightRate * imgHeight;
-    console.log(startX);
-    console.log(startY);
-    // 获取图片
-    ctx.drawImage(imgDom, startX * widthRate, startY * heightRate, cutWidth, cutHeight, 0, 0, 100, 100);
+    // 获取要展示的图片的宽高，没有就以100像素展示
+    let targetImg = $(`.${window.preViewClass}`);
+    targetImg.each((item) => {
+        let targetImageWidth = $(item).width() || 100;
+        let targetImageHeight = $(item).height() || 100;
+        // 将裁剪后的图片布置在画布上
+        ctx.drawImage(imgDom, startX * widthRate, startY * heightRate, cutWidth, cutHeight, 0, 0, targetImageWidth, targetImageHeight);
+        // 获取图片url
+        let imgUrl = canvas.toDataURL("image/png");
+        // 赋值给图片
+        $(item).attr("src", imgUrl);
+    });
 }
 
