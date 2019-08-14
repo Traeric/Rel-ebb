@@ -53,7 +53,7 @@ $(function () {
             $(photoCut).replaceWith(photoCutDom);
             // 为对应的input-file设置change事件
             changeEvenet(photoCutDom);
-            comfirmEvent();
+            comfirmEvent(photoCutDom);
             downloadEvent(photoCutDom);
         });
     }
@@ -62,11 +62,37 @@ $(function () {
 
 /**
  * 为确认按钮设置点击事件
+ * @param photoCutDom
  */
-function comfirmEvent() {
+function comfirmEvent(photoCutDom) {
     $(`.${window.confirmClass}`).click(() => {
-
+        // 获取base64文件
+        let base64Str = $(photoCutDom).find("canvas").get(0).toDataURL("image/png");
+        // 将base64编码的字符串转换成图片文件
+        let imgFile = dataURLtoFile(base64Str);
+        // 将文件设置给input
+        console.log(imgFile);
+        $(`#${window.inputId}`).get(0).files = {
+            0: imgFile,
+        };
+        console.log($(`#test`).get(0).files);
+        console.log($(`#test`).get(0).files[0]);
     });
+}
+
+function dataURLtoFile(dataurl, filename = 'file') {
+    let arr = dataurl.split(',');
+    let mime = arr[0].match(/:(.*?);/)[1];
+    let suffix = mime.split('/')[1];   // 获取图片的后缀，png jpg等
+    let bstr = atob(arr[1]);   // 对base64进行解码
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
+    }
+    return new File([u8arr], `${filename}.${suffix}`, {
+        type: mime
+    })
 }
 
 
@@ -514,8 +540,6 @@ function drawPrevImg(photoCutDom, startX, startY, imgWidth, imgHeight) {
         // 设置画布的大小
         $(photoCutDom).find('canvas').attr('width', targetImageWidth);
         $(photoCutDom).find('canvas').attr('height', targetImageHeight);
-        console.log(targetImageWidth);
-        console.log(targetImageHeight);
         // 将裁剪后的图片布置在画布上
         ctx.drawImage(imgDom, startX * widthRate, startY * heightRate, cutWidth, cutHeight, 0, 0, targetImageWidth, targetImageHeight);
         // 获取图片url
