@@ -111,7 +111,7 @@ type: 上传图片样式，drag or click
 
 <h2>FileUpload</h2>
 文件上传 <br>
-param: 上传文件的配置
+param: 上传文件的配置 <br>
 type: 上传文件样式，drag or click
 <div class="file-upload">
     <FileUpload param="fileParam" type="click"></FileUpload>
@@ -119,8 +119,11 @@ type: 上传文件样式，drag or click
 
 <h1>PhotoCut</h1>
 图片裁剪 <br>
+pre-view：
 <div class="photo-cut">
-    <PhotoCut></PhotoCut>
+    <PhotoCut pre-view="canvas"></PhotoCut>
+    <canvas class="canvas"></canvas>
+    <button class="confirm"></button>
 <!--    <div class="rel-ebb-photo-cut">-->
 <!--        <div class="rel-ebb-bg">-->
 <!--            <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg"-->

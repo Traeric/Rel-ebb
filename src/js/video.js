@@ -301,10 +301,6 @@ function voiceControlEvent(videoBoxDom) {
     $(document).mouseup(function () {
         $(document).unbind('mousemove', voiceControl);
     });
-
-    // $(videoBoxDom).find(".voice-panel .total .btn").mouseleave(function () {
-    //     $(this).unbind('mousemove', voiceControl);
-    // });
 }
 
 function voiceControl(e, currentDom) {
