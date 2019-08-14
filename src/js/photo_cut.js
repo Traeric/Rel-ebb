@@ -1,4 +1,4 @@
-export default function start(e, refDom) {
+function start(e, refDom) {
     // 获取PhotoCut标签
     let photoCutArr = $("PhotoCut");
     if (photoCutArr.length > 0) {
@@ -6,13 +6,15 @@ export default function start(e, refDom) {
             // 获取参数
             window.preViewClass = $(photoCut).attr("pre-view");  // 预览图类名
             window.confirmClass = $(photoCut).attr("confirm");  // 确认按钮类名
+            window.inputId = $(photoCut).attr('input-id');  // 绑定的input标签的id
             let ref = $(photoCut).attr("ref");
             if (ref === refDom) {
+                // 获取图片的url
+                let imgSrc = URL.createObjectURL(e.currentTarget.files[0]);
                 let photoCutDom = $(`
                     <div class="rel-ebb-photo-cut">
                         <div class="rel-ebb-bg">
-                            <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2754950309,2133495749&fm=26&gp=0.jpg"
-                                 alt="NO IMG">
+                            <img src="${imgSrc}" alt="NO IMG">
                             <div class="rel-ebb-shadow">
                                 <div class="img-frame">
                                     <div class="cutting-area">
@@ -37,7 +39,7 @@ export default function start(e, refDom) {
                                             <div class="cutting-area-v"></div>
                                             <div class="click-area"></div>
                                             <!-- 展示编辑后的图片 -->
-                                            <div class="img-display"></div>
+                                            <div class="img-display" style="background-image: url(${imgSrc});"></div>
                                         </div>
                                     </div>
                                 </div>

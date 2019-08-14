@@ -123,10 +123,11 @@ type: 上传文件样式，drag or click
 图片裁剪 <br>
 pre-view： <br>
 confirm: <br>
-ref:
+ref: <br>
+input-id: <br>
 <div class="photo-cut">
-    <input type="file" name="test" onchange="testPhotoCut()">
-    <PhotoCut pre-view="canvas" confirm="confirm" ref="currentDom"></PhotoCut>
+    <input type="file" name="test" id="test">
+    <PhotoCut pre-view="canvas" confirm="confirm" ref="currentDom" input-id="test"></PhotoCut>
     <img class="canvas" alt="NO IMG">
     <button class="confirm">确认</button>
 </div>
@@ -205,11 +206,6 @@ ref:
                 console.log(msg);
             },
         };
-    }
-
-
-    function testPhotoCut(e) {
-        RelEbb.run(e, 'currentDom');
     }
 </script>
 </body>
