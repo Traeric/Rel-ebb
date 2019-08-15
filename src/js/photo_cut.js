@@ -340,17 +340,18 @@ function resizeCuttingArea(photoCutDom) {
         let startWidth = cuttingArea.width();
         let startMouseX = e.pageX;
         let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
-        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left - 5;
+        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left;
         let startHeight = cuttingArea.height();
         let startMouseY = e.pageY;
         let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
-        let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
+        let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top;
+        let rightLength = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().left;
         $(document).mousemove((event) => {
             if (window.square === 'false') {
                 rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
                 upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
             } else if (window.square === 'true') {
-                moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, rightLength, startTop,
                     startBottom, startRight, startHeight, startWidth, cuttingArea);
             }
         });
@@ -746,10 +747,6 @@ function moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startMouseY, sta
             bottom: `${bottom}px`,
             right: `${right}px`,
         });
-        // 调整截图区域的图片位置
-        $(photoCutDom).find(".img-display").css({
-            backgroundPositionY: `-${top}px`,
-        });
         drawPrevImg(photoCutDom, $(cuttingArea).position().left, $(cuttingArea).position().top, width, height);
     }
 }
@@ -769,7 +766,7 @@ function moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startMouseY, sta
  * @param startWidth
  * @param cuttingArea
  */
-function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, rightLength, startTop,
                              startBottom, startRight, startHeight, startWidth, cuttingArea) {
     let moveY = event.pageY - startMouseY;
     let moveX = event.pageX - startMouseX;
@@ -777,25 +774,25 @@ function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, start
     let right = startRight - moveSide;
     let top = startTop - moveSide;
     // 限制大小
-    if (startBottom > startLeft) {
-        top = Math.max(0, top);
-        top = Math.min(startLeft, top);
-        right = Math.max(0, right);
-        right = Math.min(startLeft, right);
-    } else {
-        top = Math.max(0, top);
-        top = Math.min(startBottom, top);
-        right = Math.max(0, right);
-        right = Math.min(startBottom, right);
-    }
+    // if (startBottom > rightLength) {
+    //     top = Math.max(0, top);
+    //     top = Math.min(rightLength, top);
+    //     right = Math.max(0, right);
+    //     right = Math.min(rightLength, right);
+    // } else {
+    //     top = Math.max(0, top);
+    //     top = Math.min(startBottom, top);
+    //     right = Math.max(0, right);
+    //     right = Math.min(startBottom, right);
+    // }
     if (right > 0 && top > 0) {
         let height = startHeight + moveSide;
         let width = startWidth + moveSide;
+        // 调整截图区域的大小
         $(cuttingArea).css({
             height: height + 'px',
             width: width + 'px',
         });
-        // 调整截图区域的大小
         $(cuttingArea).css({
             top: `${top}px`,
             right: `${right}px`,
@@ -804,7 +801,7 @@ function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, start
         $(photoCutDom).find(".img-display").css({
             backgroundPositionY: `-${top}px`,
         });
-        drawPrevImg(photoCutDom, $(cuttingArea).position().left, $(cuttingArea).position().top, width, height);
+        drawPrevImg(photoCutDom, $(cuttingArea).position().left, top, width, height);
     }
 }
 
