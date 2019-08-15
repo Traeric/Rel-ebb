@@ -71,12 +71,8 @@ function comfirmEvent(photoCutDom) {
         // 将base64编码的字符串转换成图片文件
         let imgFile = dataURLtoFile(base64Str);
         // 将文件设置给input
-        console.log(imgFile);
-        $(`#${window.inputId}`).get(0).files = {
-            0: imgFile,
-        };
-        console.log($(`#test`).get(0).files);
-        console.log($(`#test`).get(0).files[0]);
+        $(`#${window.inputId}`).get(0).files = new FormData().append('0', imgFile);
+        alert("截图成功");
     });
 }
 
