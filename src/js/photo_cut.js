@@ -9,6 +9,7 @@ $(function () {
             window.downloadClass = $(photoCut).attr('download');  // 下载按钮的类名
             window.inputId = $(photoCut).attr('input-id');  // 绑定的input标签的id
             window.imgName = $(photoCut).attr('img-name');  // 要下载的图片名称
+            window.square = $(photoCut).attr("square") || 'false';  // 是否设置矩形截图
             // 获取图片的url
             let photoCutDom = $(`
                 <div class="rel-ebb-photo-cut">
@@ -143,13 +144,32 @@ function styleInitialize(photoCutDom) {
         $(this).attr("crossOrigin", 'Anonymous');
         let imgWidth = $(this).width();
         let imgHeight = $(this).height();
+        let left = 0;
+        let top = 0;
         // 设置截图区域的大小
-        $(photoCutDom).find(".cutting-area").css({
-            width: `${(imgWidth - 50) > 20 ? (imgWidth - 50) : imgWidth}px`,
-            height: `${(imgHeight - 50) > 20 ? (imgHeight - 50) : imgHeight}px`,
-            left: `${(imgWidth - 50) > 20 ? 25 : 0}px`,
-            top: `${(imgHeight - 50) > 20 ? 25 : 0}px`,
-        });
+        if (window.square === 'false') {
+            left = (imgWidth - 50) > 20 ? 25 : 0;
+            top = (imgHeight - 50) > 20 ? 25 : 0;
+            $(photoCutDom).find(".cutting-area").css({
+                width: `${(imgWidth - 50) > 20 ? (imgWidth - 50) : imgWidth}px`,
+                height: `${(imgHeight - 50) > 20 ? (imgHeight - 50) : imgHeight}px`,
+                left: `${left}px`,
+                top: `${top}px`,
+            });
+        } else if (window.square === 'true') {
+            // 按照正方形来截图
+            // 获取最短的边
+            let minSide = Math.min(imgWidth, imgHeight);
+            // 获取居中显示的位置
+            left = ((minSide - 50) > 20) ? ((imgWidth - minSide + 50) / 2) : 0;
+            top = ((minSide - 50) > 20) ? ((imgHeight - minSide + 50) / 2) : 0;
+            $(photoCutDom).find(".cutting-area").css({
+                width: `${(imgWidth - 50) > 20 ? (minSide - 50) : minSide}px`,
+                height: `${(imgHeight - 50) > 20 ? (minSide - 50) : minSide}px`,
+                left: `${left}px`,
+                top: `${top}px`,
+            });
+        }
         // 设置图片范围
         $(photoCutDom).find(".img-frame").css({
             width: `${imgWidth}px`,
@@ -158,8 +178,7 @@ function styleInitialize(photoCutDom) {
         // 设置截图区域的背景大小以及要显示的区域
         $(photoCutDom).find(".img-display").css({
             backgroundSize: `${imgWidth}px ${imgHeight}px`,
-            backgroundPosition: `${(imgWidth - 50) > 20 ? -25 : 0}px 
-                                 ${(imgHeight - 50) > 20 ? -25 : 0}px`,
+            backgroundPosition: `-${left}px -${top}px`,
         });
         // 图片裁剪预览
         let startX = (imgWidth - 50) > 20 ? 25 : 0;
@@ -220,54 +239,56 @@ function moveCuttingArea(photoCutDom) {
 function resizeCuttingArea(photoCutDom) {
     let imgFrame = $(photoCutDom).find(".img-frame");
     let cuttingArea = $(photoCutDom).find(".cutting-area");
-    // 上面调整大小
-    $(photoCutDom).find(".resize-line-up").mousedown(function (e) {
-        // 取消移动事件
-        $(photoCutDom).find(".cutting-area").unbind('mousemove');
-        let startHeight = cuttingArea.height();
-        let startMouseY = e.pageY;
-        let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
-        let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
-        $(document).mousemove((event) => {
-            upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
+    if (window.square === 'false') {
+        // 上面调整大小
+        $(photoCutDom).find(".resize-line-up").mousedown(function (e) {
+            // 取消移动事件
+            $(photoCutDom).find(".cutting-area").unbind('mousemove');
+            let startHeight = cuttingArea.height();
+            let startMouseY = e.pageY;
+            let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
+            let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
+            $(document).mousemove((event) => {
+                upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
+            });
         });
-    });
-    // 下面调整大小
-    $(photoCutDom).find(".resize-line-down").mousedown(function (e) {
-        // 取消移动事件
-        $(photoCutDom).find(".cutting-area").unbind('mousemove');
-        let startHeight = cuttingArea.height();
-        let startMouseY = e.pageY;
-        let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
-        let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
-        $(document).mousemove((event) => {
-            downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
+        // 下面调整大小
+        $(photoCutDom).find(".resize-line-down").mousedown(function (e) {
+            // 取消移动事件
+            $(photoCutDom).find(".cutting-area").unbind('mousemove');
+            let startHeight = cuttingArea.height();
+            let startMouseY = e.pageY;
+            let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
+            let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
+            $(document).mousemove((event) => {
+                downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
+            });
         });
-    });
-    // 左边调整大小
-    $(photoCutDom).find(".resize-line-left").mousedown(function (e) {
-        // 取消移动事件
-        $(photoCutDom).find(".cutting-area").unbind('mousemove');
-        let startWidth = cuttingArea.width();
-        let startMouseX = e.pageX;
-        let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
-        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left - 5;
-        $(document).mousemove((event) => {
-            leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+        // 左边调整大小
+        $(photoCutDom).find(".resize-line-left").mousedown(function (e) {
+            // 取消移动事件
+            $(photoCutDom).find(".cutting-area").unbind('mousemove');
+            let startWidth = cuttingArea.width();
+            let startMouseX = e.pageX;
+            let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
+            let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left - 5;
+            $(document).mousemove((event) => {
+                leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+            });
         });
-    });
-    // 右边调整大小
-    $(photoCutDom).find(".resize-line-right").mousedown(function (e) {
-        // 取消移动事件
-        $(photoCutDom).find(".cutting-area").unbind('mousemove');
-        let startWidth = cuttingArea.width();
-        let startMouseX = e.pageX;
-        let startRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
-        let startLeft = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().left;
-        $(document).mousemove((event) => {
-            rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
+        // 右边调整大小
+        $(photoCutDom).find(".resize-line-right").mousedown(function (e) {
+            // 取消移动事件
+            $(photoCutDom).find(".cutting-area").unbind('mousemove');
+            let startWidth = cuttingArea.width();
+            let startMouseX = e.pageX;
+            let startRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
+            let startLeft = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().left;
+            $(document).mousemove((event) => {
+                rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
+            });
         });
-    });
+    }
     // 左上调整大小
     $(photoCutDom).find(".cutting-point-left-up").mousedown(function (e) {
         // 取消移动事件
@@ -281,8 +302,13 @@ function resizeCuttingArea(photoCutDom) {
         let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
         let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
         $(document).mousemove((event) => {
-            upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
-            leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+            if (window.square === 'false') {
+                upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
+                leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+            } else if (window.square === 'true') {
+                moveBySquareLEFTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                    startBottom, startRight, startHeight, startWidth, cuttingArea);
+            }
         });
     });
     // 左下调整大小
@@ -298,8 +324,13 @@ function resizeCuttingArea(photoCutDom) {
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
         let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
         $(document).mousemove((event) => {
-            leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
-            downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
+            if (window.square === 'false') {
+                leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+                downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
+            } else if (window.square === 'true') {
+                moveBySquareLEFTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                    startBottom, startRight, startHeight, startWidth, cuttingArea);
+            }
         });
     });
     // 右上调整大小
@@ -315,8 +346,13 @@ function resizeCuttingArea(photoCutDom) {
         let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
         let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top - 5;
         $(document).mousemove((event) => {
-            rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
-            upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
+            if (window.square === 'false') {
+                rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
+                upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
+            } else if (window.square === 'true') {
+                moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                    startBottom, startRight, startHeight, startWidth, cuttingArea);
+            }
         });
     });
     // 右下调整大小
@@ -332,8 +368,13 @@ function resizeCuttingArea(photoCutDom) {
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
         let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
         $(document).mousemove((event) => {
-            rightMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
-            downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
+            if (window.square === "false") {
+                rightMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+                downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
+            } else if (window.square === "true") {
+                moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                    startBottom, startRight, startHeight, startWidth, cuttingArea);
+            }
         });
     });
     // 清除事件
@@ -354,7 +395,8 @@ function resizeCuttingArea(photoCutDom) {
  * @param imgFrame
  * @param cuttingArea
  */
-function upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea) {
+function upMove(event, photoCutDom, startMouseY, startTop, startBottom,
+                startHeight, imgFrame, cuttingArea) {
     let moveY = event.pageY - startMouseY;
     // 调整位置
     let top = startTop + moveY;
@@ -366,8 +408,8 @@ function upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHei
         // 重新调整截图区域的大小
         let height = startHeight - moveY;
         // 限制大小
-        height = Math.max(0, height);
-        height = Math.min(imgFrame.height(), height);
+        // height = Math.max(0, height);
+        // height = Math.min(imgFrame.height(), height);
         $(cuttingArea).css({
             height: height + 'px',
         });
@@ -396,7 +438,8 @@ function upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHei
  * @param imgFrame
  * @param cuttingArea
  */
-function downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea) {
+function downMove(event, photoCutDom, startMouseY, startBottom,
+                  startTop, startHeight, imgFrame, cuttingArea) {
     let moveY = event.pageY - startMouseY;
     // 调整位置
     let bottom = startBottom - moveY;
@@ -408,8 +451,8 @@ function downMove(event, photoCutDom, startMouseY, startBottom, startTop, startH
         // 重新调整截图区域的大小
         let height = startHeight + moveY;
         // 限制大小
-        height = Math.max(0, height);
-        height = Math.min(imgFrame.height(), height);
+        // height = Math.max(0, height);
+        // height = Math.min(imgFrame.height(), height);
         $(cuttingArea).css({
             height: height + 'px',
         });
@@ -435,7 +478,8 @@ function downMove(event, photoCutDom, startMouseY, startBottom, startTop, startH
  * @param imgFrame
  * @param cuttingArea
  */
-function leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea) {
+function leftMove(event, photoCutDom, startMouseX, startLeft, startRight,
+                  startWidth, imgFrame, cuttingArea) {
     let moveX = event.pageX - startMouseX;
     // 调整位置
     let left = startLeft + moveX;
@@ -447,8 +491,8 @@ function leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startW
         // 重新调整截图区域的大小
         let width = startWidth - moveX;
         // 限制大小
-        width = Math.max(0, width);
-        width = Math.min(imgFrame.width(), width);
+        // width = Math.max(0, width);
+        // width = Math.min(imgFrame.width(), width);
         $(cuttingArea).css({
             width: width + 'px',
         });
@@ -477,7 +521,8 @@ function leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startW
  * @param imgFrame
  * @param cuttingArea
  */
-function rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea) {
+function rightMove(event, photoCutDom, startMouseX, startRight, startLeft,
+                   startWidth, imgFrame, cuttingArea) {
     let moveX = event.pageX - startMouseX;
     // 调整位置
     let right = startRight - moveX;
@@ -489,8 +534,8 @@ function rightMove(event, photoCutDom, startMouseX, startRight, startLeft, start
         // 重新调整截图区域的大小
         let width = startWidth + moveX;
         // 限制大小
-        width = Math.max(0, width);
-        width = Math.min(imgFrame.width(), width);
+        // width = Math.max(0, width);
+        // width = Math.min(imgFrame.width(), width);
         $(cuttingArea).css({
             width: width + 'px',
         });
@@ -544,4 +589,223 @@ function drawPrevImg(photoCutDom, startX, startY, imgWidth, imgHeight) {
         $(item).attr("src", imgUrl);
     });
 }
+
+
+/**
+ * 移动正方形-左上
+ * @param event
+ * @param photoCutDom
+ * @param startMouseX
+ * @param startMouseY
+ * @param startLeft
+ * @param startTop
+ * @param startBottom
+ * @param startRight
+ * @param startHeight
+ * @param startWidth
+ * @param cuttingArea
+ */
+function moveBySquareLEFTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                            startBottom, startRight, startHeight, startWidth, cuttingArea) {
+    let moveY = event.pageY - startMouseY;
+    let moveX = event.pageX - startMouseX;
+    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
+    let left = startLeft + moveSide;
+    let top = startTop + moveSide;
+    // 限制大小
+    if (startBottom > startRight) {
+        top = Math.max(0, top);
+        top = Math.min(startRight, top);
+        left = Math.max(0, left);
+        left = Math.min(startRight, left);
+    } else {
+        top = Math.max(0, top);
+        top = Math.min(startBottom, top);
+        left = Math.max(0, left);
+        left = Math.min(startBottom, left);
+    }
+    if (left > 0 && top > 0) {
+        let height = startHeight - moveSide;
+        let width = startWidth - moveSide;
+        $(cuttingArea).css({
+            height: height + 'px',
+            width: width + 'px',
+        });
+        // 调整截图区域的大小
+        $(cuttingArea).css({
+            top: `${top}px`,
+            left: `${left}px`,
+        });
+        // 调整截图区域的图片位置
+        $(photoCutDom).find(".img-display").css({
+            backgroundPositionY: `-${top}px`,
+            backgroundPositionX: `-${left}px`,
+        });
+        // 调整预览图
+        drawPrevImg(photoCutDom, left, top, width, height);
+    }
+}
+
+
+/**
+ * 移动正方形-左下
+ * @param event
+ * @param photoCutDom
+ * @param startMouseX
+ * @param startMouseY
+ * @param startLeft
+ * @param startTop
+ * @param startBottom
+ * @param startRight
+ * @param startHeight
+ * @param startWidth
+ * @param cuttingArea
+ */
+function moveBySquareLEFTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                              startBottom, startRight, startHeight, startWidth, cuttingArea) {
+    let moveY = event.pageY - startMouseY;
+    let moveX = event.pageX - startMouseX;
+    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
+    let left = startLeft + moveSide;
+    let bottom = startBottom + moveSide;
+    // 限制大小
+    if (startTop > startRight) {
+        bottom = Math.max(0, bottom);
+        bottom = Math.min(startRight, bottom);
+        left = Math.max(0, left);
+        left = Math.min(startRight, left);
+    } else {
+        bottom = Math.max(0, bottom);
+        bottom = Math.min(startTop, bottom);
+        left = Math.max(0, left);
+        left = Math.min(startTop, left);
+    }
+    if (left > 0 && bottom > 0) {
+        let height = startHeight - moveSide;
+        let width = startWidth - moveSide;
+        $(cuttingArea).css({
+            height: height + 'px',
+            width: width + 'px',
+        });
+        // 调整截图区域的大小
+        $(cuttingArea).css({
+            bottom: `${bottom}px`,
+            left: `${left}px`,
+        });
+        // 调整截图区域的图片位置
+        $(photoCutDom).find(".img-display").css({
+            backgroundPositionX: `-${left}px`,
+        });
+        drawPrevImg(photoCutDom, left, $(cuttingArea).position().top, width, height);
+    }
+}
+
+
+/**
+ * 移动正方形-右下
+ * @param event
+ * @param photoCutDom
+ * @param startMouseX
+ * @param startMouseY
+ * @param startLeft
+ * @param startTop
+ * @param startBottom
+ * @param startRight
+ * @param startHeight
+ * @param startWidth
+ * @param cuttingArea
+ */
+function moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                               startBottom, startRight, startHeight, startWidth, cuttingArea) {
+    let moveY = event.pageY - startMouseY;
+    let moveX = event.pageX - startMouseX;
+    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
+    let right = startRight - moveSide;
+    let bottom = startBottom - moveSide;
+    // 限制大小
+    if (startTop > startLeft) {
+        bottom = Math.max(0, bottom);
+        bottom = Math.min(startLeft, bottom);
+        right = Math.max(0, right);
+        right = Math.min(startLeft, right);
+    } else {
+        bottom = Math.max(0, bottom);
+        bottom = Math.min(startTop, bottom);
+        right = Math.max(0, right);
+        right = Math.min(startTop, right);
+    }
+    if (right > 0 && bottom > 0) {
+        let height = startHeight + moveSide;
+        let width = startWidth + moveSide;
+        $(cuttingArea).css({
+            height: height + 'px',
+            width: width + 'px',
+        });
+        // 调整截图区域的大小
+        $(cuttingArea).css({
+            bottom: `${bottom}px`,
+            right: `${right}px`,
+        });
+        // 调整截图区域的图片位置
+        $(photoCutDom).find(".img-display").css({
+            backgroundPositionY: `-${top}px`,
+        });
+        drawPrevImg(photoCutDom, $(cuttingArea).position().left, $(cuttingArea).position().top, width, height);
+    }
+}
+
+
+/**
+ * 移动正方形-右上
+ * @param event
+ * @param photoCutDom
+ * @param startMouseX
+ * @param startMouseY
+ * @param startLeft
+ * @param startTop
+ * @param startBottom
+ * @param startRight
+ * @param startHeight
+ * @param startWidth
+ * @param cuttingArea
+ */
+function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                             startBottom, startRight, startHeight, startWidth, cuttingArea) {
+    let moveY = event.pageY - startMouseY;
+    let moveX = event.pageX - startMouseX;
+    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
+    let right = startRight - moveSide;
+    let top = startTop - moveSide;
+    // 限制大小
+    if (startBottom > startLeft) {
+        top = Math.max(0, top);
+        top = Math.min(startLeft, top);
+        right = Math.max(0, right);
+        right = Math.min(startLeft, right);
+    } else {
+        top = Math.max(0, top);
+        top = Math.min(startBottom, top);
+        right = Math.max(0, right);
+        right = Math.min(startBottom, right);
+    }
+    if (right > 0 && top > 0) {
+        let height = startHeight + moveSide;
+        let width = startWidth + moveSide;
+        $(cuttingArea).css({
+            height: height + 'px',
+            width: width + 'px',
+        });
+        // 调整截图区域的大小
+        $(cuttingArea).css({
+            top: `${top}px`,
+            right: `${right}px`,
+        });
+        // 调整截图区域的图片位置
+        $(photoCutDom).find(".img-display").css({
+            backgroundPositionY: `-${top}px`,
+        });
+        drawPrevImg(photoCutDom, $(cuttingArea).position().left, $(cuttingArea).position().top, width, height);
+    }
+}
+
 
