@@ -67,7 +67,7 @@ $(function () {
  */
 function comfirmEvent(photoCutDom) {
     $(`.${window.confirmClass}`).click(() => {
-        // 获取base64文件
+        // 获取base64字符串
         let base64Str = $(photoCutDom).find("canvas").get(0).toDataURL("image/png");
         // 将base64编码的字符串转换成图片文件
         let imgFile = dataURLtoFile(base64Str);
@@ -77,6 +77,13 @@ function comfirmEvent(photoCutDom) {
     });
 }
 
+
+/**
+ * base64转换函数
+ * @param dataurl
+ * @param filename
+ * @returns {File}
+ */
 function dataURLtoFile(dataurl, filename = 'file') {
     let arr = dataurl.split(',');
     let mime = arr[0].match(/:(.*?);/)[1];
