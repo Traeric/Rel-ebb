@@ -314,7 +314,7 @@ autoUpload有两个值，true或者false
 
 # 图片裁剪
 
-使用图片上传的标签是<PhotoCut></PhotoCut>，该标签使用需要与一个input=file标签绑定，将input标签的id写到PhotoCut标签的input-id参数上即可，当点击input传入文件后，就会触发input标签的change事件，然后进行裁剪框的调整即可
+使用图片上传的标签是<PhotoCut></PhotoCut>，该标签会与父级元素的宽度自适应，使用时需要与一个input=file标签绑定，将input标签的id写到PhotoCut标签的input-id参数上即可，当点击input传入文件后，就会触发input标签的change事件，然后进行裁剪框的调整即可
 
 ## 参数说明
 |   属性   |  类型  |  默认值   | 是否必须 |                             说明                             |
