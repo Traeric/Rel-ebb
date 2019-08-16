@@ -299,7 +299,7 @@ function voiceControlEvent(videoBoxDom) {
     });
 
     $(document).mouseup(function () {
-        $(document).unbind('mousemove', voiceControl);
+        $(document).unbind('mousemove');
     });
 }
 
@@ -377,7 +377,7 @@ function progressBarEvent(videoBoxDom) {
         });
     });
     $(document).mouseup(function () {
-        $(document).unbind('mousemove', progressControl);
+        $(document).unbind('mousemove');
         $(videoBoxDom).find('video').get(0).play();
         $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
         $(videoBoxDom).find('.play .img').attr('title', '暂停');
