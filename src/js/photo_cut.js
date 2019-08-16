@@ -306,7 +306,7 @@ function resizeCuttingArea(photoCutDom) {
                 upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
                 leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
             } else if (window.square === 'true') {
-                moveBySquareLEFTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+                moveBySquareLEFTUP(event, photoCutDom, startMouseX, startLeft, startTop,
                     startBottom, startRight, startHeight, startWidth, cuttingArea);
             }
         });
@@ -328,8 +328,8 @@ function resizeCuttingArea(photoCutDom) {
                 leftMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
                 downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
             } else if (window.square === 'true') {
-                moveBySquareLEFTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
-                    startBottom, startRight, startHeight, startWidth, cuttingArea);
+                moveBySquareLEFTDOWN(event, photoCutDom, startMouseX, startLeft, startRight,
+                    startBottom, startHeight, startWidth, cuttingArea);
             }
         });
     });
@@ -340,19 +340,19 @@ function resizeCuttingArea(photoCutDom) {
         let startWidth = cuttingArea.width();
         let startMouseX = e.pageX;
         let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
-        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left;
+        let startRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
         let startHeight = cuttingArea.height();
         let startMouseY = e.pageY;
         let startTop = cuttingArea.get(0).getBoundingClientRect().top - imgFrame.get(0).getBoundingClientRect().top;
         let startBottom = cuttingArea.get(0).getBoundingClientRect().bottom - imgFrame.get(0).getBoundingClientRect().top;
-        let rightLength = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().left;
+        let squareStartRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
         $(document).mousemove((event) => {
             if (window.square === 'false') {
                 rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
                 upMove(event, photoCutDom, startMouseY, startTop, startBottom, startHeight, imgFrame, cuttingArea);
             } else if (window.square === 'true') {
-                moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, rightLength, startTop,
-                    startBottom, startRight, startHeight, startWidth, cuttingArea);
+                moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startHeight, startWidth,
+                    squareStartRight, startTop, startBottom, cuttingArea);
             }
         });
     });
@@ -363,18 +363,19 @@ function resizeCuttingArea(photoCutDom) {
         let startWidth = cuttingArea.width();
         let startMouseX = e.pageX;
         let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
-        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left - 5;
+        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left;
         let startHeight = cuttingArea.height();
         let startMouseY = e.pageY;
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
         let startTop = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().top;
+        let squareStartRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
         $(document).mousemove((event) => {
             if (window.square === "false") {
                 rightMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
                 downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
             } else if (window.square === "true") {
-                moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
-                    startBottom, startRight, startHeight, startWidth, cuttingArea);
+                moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startBottom,
+                    squareStartRight, startHeight, startWidth, cuttingArea);
             }
         });
     });
@@ -597,7 +598,6 @@ function drawPrevImg(photoCutDom, startX, startY, imgWidth, imgHeight) {
  * @param event
  * @param photoCutDom
  * @param startMouseX
- * @param startMouseY
  * @param startLeft
  * @param startTop
  * @param startBottom
@@ -606,28 +606,22 @@ function drawPrevImg(photoCutDom, startX, startY, imgWidth, imgHeight) {
  * @param startWidth
  * @param cuttingArea
  */
-function moveBySquareLEFTUP(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
+function moveBySquareLEFTUP(event, photoCutDom, startMouseX, startLeft, startTop,
                             startBottom, startRight, startHeight, startWidth, cuttingArea) {
-    let moveY = event.pageY - startMouseY;
     let moveX = event.pageX - startMouseX;
-    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
-    let left = startLeft + moveSide;
-    let top = startTop + moveSide;
+    let left = startLeft + moveX;
+    let top = startTop + moveX;
     // 限制大小
-    if (startBottom > startRight) {
-        top = Math.max(0, top);
-        top = Math.min(startRight, top);
-        left = Math.max(0, left);
-        left = Math.min(startRight, left);
-    } else {
-        top = Math.max(0, top);
-        top = Math.min(startBottom, top);
-        left = Math.max(0, left);
-        left = Math.min(startBottom, left);
-    }
+    top = Math.max(0, top);
+    top = Math.min(startBottom, top);
+    left = Math.max(0, left);
+    left = Math.min(startRight, left);
+
     if (left > 0 && top > 0) {
-        let height = startHeight - moveSide;
-        let width = startWidth - moveSide;
+        let height = startHeight - moveX;
+        let width = startWidth - moveX;
+        height = Math.max(1, height);
+        width = Math.max(1, width);
         $(cuttingArea).css({
             height: height + 'px',
             width: width + 'px',
@@ -653,44 +647,33 @@ function moveBySquareLEFTUP(event, photoCutDom, startMouseX, startMouseY, startL
  * @param event
  * @param photoCutDom
  * @param startMouseX
- * @param startMouseY
  * @param startLeft
- * @param startTop
- * @param startBottom
  * @param startRight
+ * @param startBottom
  * @param startHeight
  * @param startWidth
  * @param cuttingArea
  */
-function moveBySquareLEFTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
-                              startBottom, startRight, startHeight, startWidth, cuttingArea) {
-    let moveY = event.pageY - startMouseY;
+function moveBySquareLEFTDOWN(event, photoCutDom, startMouseX, startLeft,
+                              startRight, startBottom, startHeight, startWidth, cuttingArea) {
     let moveX = event.pageX - startMouseX;
-    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
-    let left = startLeft + moveSide;
-    let bottom = startBottom + moveSide;
+    let left = startLeft + moveX;
+    let bottom = startBottom + moveX;
     // 限制大小
-    if (startTop > startRight) {
-        bottom = Math.max(0, bottom);
-        bottom = Math.min(startRight, bottom);
-        left = Math.max(0, left);
-        left = Math.min(startRight, left);
-    } else {
-        bottom = Math.max(0, bottom);
-        bottom = Math.min(startTop, bottom);
-        left = Math.max(0, left);
-        left = Math.min(startTop, left);
-    }
-    if (left > 0 && bottom > 0) {
-        let height = startHeight - moveSide;
-        let width = startWidth - moveSide;
+    left = Math.max(0, left);
+    left = Math.min(startRight, left);
+
+    if (bottom > 0 && left > 0) {
+        let height = startHeight - moveX;
+        let width = startWidth - moveX;
+        height = Math.max(1, height);
+        width = Math.max(1, width);
         $(cuttingArea).css({
             height: height + 'px',
             width: width + 'px',
         });
         // 调整截图区域的大小
         $(cuttingArea).css({
-            bottom: `${bottom}px`,
             left: `${left}px`,
         });
         // 调整截图区域的图片位置
@@ -707,45 +690,25 @@ function moveBySquareLEFTDOWN(event, photoCutDom, startMouseX, startMouseY, star
  * @param event
  * @param photoCutDom
  * @param startMouseX
- * @param startMouseY
- * @param startLeft
- * @param startTop
  * @param startBottom
  * @param startRight
  * @param startHeight
  * @param startWidth
  * @param cuttingArea
  */
-function moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startMouseY, startLeft, startTop,
-                               startBottom, startRight, startHeight, startWidth, cuttingArea) {
-    let moveY = event.pageY - startMouseY;
+function moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startBottom,
+                               startRight, startHeight, startWidth, cuttingArea) {
     let moveX = event.pageX - startMouseX;
-    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
-    let right = startRight - moveSide;
-    let bottom = startBottom - moveSide;
-    // 限制大小
-    if (startTop > startLeft) {
-        bottom = Math.max(0, bottom);
-        bottom = Math.min(startLeft, bottom);
-        right = Math.max(0, right);
-        right = Math.min(startLeft, right);
-    } else {
-        bottom = Math.max(0, bottom);
-        bottom = Math.min(startTop, bottom);
-        right = Math.max(0, right);
-        right = Math.min(startTop, right);
-    }
+    let right = startRight - moveX;
+    let bottom = startBottom - moveX;
     if (right > 0 && bottom > 0) {
-        let height = startHeight + moveSide;
-        let width = startWidth + moveSide;
+        let height = startHeight + moveX;
+        let width = startWidth + moveX;
+        height = Math.max(1, height);
+        width = Math.max(1, width);
         $(cuttingArea).css({
             height: height + 'px',
             width: width + 'px',
-        });
-        // 调整截图区域的大小
-        $(cuttingArea).css({
-            bottom: `${bottom}px`,
-            right: `${right}px`,
         });
         drawPrevImg(photoCutDom, $(cuttingArea).position().left, $(cuttingArea).position().top, width, height);
     }
@@ -757,37 +720,27 @@ function moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startMouseY, sta
  * @param event
  * @param photoCutDom
  * @param startMouseX
- * @param startMouseY
- * @param startLeft
- * @param startTop
- * @param startBottom
- * @param startRight
  * @param startHeight
  * @param startWidth
+ * @param startRight
+ * @param startTop
+ * @param startBottom
  * @param cuttingArea
  */
-function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, rightLength, startTop,
-                             startBottom, startRight, startHeight, startWidth, cuttingArea) {
-    let moveY = event.pageY - startMouseY;
+function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startHeight, startWidth,
+                             startRight, startTop, startBottom, cuttingArea) {
     let moveX = event.pageX - startMouseX;
-    let moveSide = Math.abs(moveX) > Math.abs(moveY) ? moveX : moveY;
-    let right = startRight - moveSide;
-    let top = startTop - moveSide;
+    let top = startTop - moveX;
+    let right = startRight - moveX;
     // 限制大小
-    // if (startBottom > rightLength) {
-    //     top = Math.max(0, top);
-    //     top = Math.min(rightLength, top);
-    //     right = Math.max(0, right);
-    //     right = Math.min(rightLength, right);
-    // } else {
-    //     top = Math.max(0, top);
-    //     top = Math.min(startBottom, top);
-    //     right = Math.max(0, right);
-    //     right = Math.min(startBottom, right);
-    // }
+    top = Math.max(0, top);
+    top = Math.min(startBottom, top);
+
     if (right > 0 && top > 0) {
-        let height = startHeight + moveSide;
-        let width = startWidth + moveSide;
+        let height = startHeight + moveX;
+        let width = startWidth + moveX;
+        height = Math.max(1, height);
+        width = Math.max(1, width);
         // 调整截图区域的大小
         $(cuttingArea).css({
             height: height + 'px',
@@ -795,7 +748,6 @@ function moveBySquareRIGHTUP(event, photoCutDom, startMouseX, startMouseY, right
         });
         $(cuttingArea).css({
             top: `${top}px`,
-            right: `${right}px`,
         });
         // 调整截图区域的图片位置
         $(photoCutDom).find(".img-display").css({
