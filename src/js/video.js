@@ -376,8 +376,10 @@ function progressBarEvent(videoBoxDom) {
             progressControl(e, currentDom);
         });
     });
-    $(document).mouseup(function () {
+    $(document).mouseup(() => {
         $(document).unbind('mousemove');
+    });
+    progressBtnDom.mouseup(() => {
         $(videoBoxDom).find('video').get(0).play();
         $(videoBoxDom).find('.play .img').removeClass('play').addClass('pause');
         $(videoBoxDom).find('.play .img').attr('title', '暂停');

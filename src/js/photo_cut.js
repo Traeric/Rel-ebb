@@ -370,7 +370,7 @@ function resizeCuttingArea(photoCutDom) {
         let startWidth = cuttingArea.width();
         let startMouseX = e.pageX;
         let startLeft = cuttingArea.get(0).getBoundingClientRect().left - imgFrame.get(0).getBoundingClientRect().left;
-        let startRight = cuttingArea.get(0).getBoundingClientRect().right - imgFrame.get(0).getBoundingClientRect().left;
+        let startRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
         let startHeight = cuttingArea.height();
         let startMouseY = e.pageY;
         let startBottom = imgFrame.get(0).getBoundingClientRect().bottom - cuttingArea.get(0).getBoundingClientRect().bottom;
@@ -378,7 +378,7 @@ function resizeCuttingArea(photoCutDom) {
         let squareStartRight = imgFrame.get(0).getBoundingClientRect().right - cuttingArea.get(0).getBoundingClientRect().right;
         $(document).mousemove((event) => {
             if (window.square === "false") {
-                rightMove(event, photoCutDom, startMouseX, startLeft, startRight, startWidth, imgFrame, cuttingArea);
+                rightMove(event, photoCutDom, startMouseX, startRight, startLeft, startWidth, imgFrame, cuttingArea);
                 downMove(event, photoCutDom, startMouseY, startBottom, startTop, startHeight, imgFrame, cuttingArea);
             } else if (window.square === "true") {
                 moveBySquareRIGHTDOWN(event, photoCutDom, startMouseX, startBottom,
