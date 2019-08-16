@@ -317,10 +317,28 @@ autoUpload有两个值，true或者false
 使用图片上传的标签是<PhotoCut></PhotoCut>，该标签使用需要与一个input=file标签绑定，将input标签的id写到PhotoCut标签的input-id参数上即可，当点击input传入文件后，就会触发input标签的change事件，然后进行裁剪框的调整即可
 
 ## 参数说明
-|   属性   |  类型  | 默认值 | 是否必须 |                             说明                             |
-| :------: | :----: | :----: | :------: | :----------------------------------------------------------: |
-| pre-view | string |   无   |    否    | 如果需要图片的裁剪预览，可以自己写一个img标签，然后将img标签的class属性赋值给该属性，可以设置多个img标签，只需要保持class一致即可 |
-| confirm  | string |   无   |    是    | 当裁剪好图片后，需要将裁剪好后的图片重新返回到input标签中，这时候需要自己定义一个dom元素，将该元素的class值赋值给该属性，然后当图片调整好后点击该元素即可将裁剪后的图片保存到input元素中 |
+|   属性   |  类型  |  默认值   | 是否必须 |                             说明                             |
+| :------: | :----: | :-------: | :------: | :----------------------------------------------------------: |
+| pre-view | string |    无     |    否    | 如果需要图片的裁剪预览，可以自己写一个img标签，然后将img标签的class赋值给该属性，可以设置多个img标签，只需要保持class一致即可 |
+| confirm  | string |    无     |    是    | 当裁剪好图片后，需要将裁剪好后的图片重新返回到input标签中，这时候需要自己定义一个dom元素，将该元素的class值赋值给该属性，然后当图片调整好后点击该元素即可将裁剪后的图片保存到input元素中 |
+| download | string |    无     |    否    | 如果想要将裁剪后的图片保存到本地，可以定义一个元素，将该元素的class赋值给该属性，当选择好裁剪区域后，点击下载元素即可下载图片到本地 |
+| input-id | string |    无     |    是    | 图片裁剪需要通过一个type为file的input标签来导入需要裁剪的图片，因此input标签在图片裁剪中必不可少，所以需要使用input-id属性指向对应的input标签的id，即需要将input标签的id值传给这个属性 |
+| img-name | string | "rel-ebb" |    否    | 如果需要下载图片，可以指定一个下载时的名字，该属性可以为图片指定下载时的名字 |
+|  square  | string |   false   |    否    | 有的时候希望裁剪的区域是正方形，那么可以设置这个属性的值为true，那么截图区域会严格的按照正方形来裁剪 |
+
+## 实例代码
+
+```html
+<input type="file" name="test" id="test">
+<PhotoCut pre-view="canvas" confirm="confirm" download="download"
+          input-id="test" img-name="test" square="false"></PhotoCut>
+<!-- 显示区域 -->
+<img class="canvas" alt="NO IMG" height="100" width="100">
+<img class="canvas" alt="NO IMG" height="300" width="300">
+<!-- 操作按钮 -->
+<button class="confirm">确认</button>
+<button class="download">下载</button>
+```
 
 
 
