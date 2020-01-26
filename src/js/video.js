@@ -42,7 +42,7 @@ $(function () {
                     <div class="rel-ebb-progress-bar">
                         <div class="bar">
                             <div class="setted"></div>
-                            <div class="btn"></div>
+                            <div class="rel-ebb-btn"></div>
                             <div class="rest"></div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@ $(function () {
                                         <div class="show">
                                             <div class="total">
                                                 <div class="rest"></div>
-                                                <div class="btn"></div>
+                                                <div class="rel-ebb-btn"></div>
                                                 <div class="seted"></div>
                                             </div>
                                         </div>
@@ -207,7 +207,7 @@ function playEvent(videoBoxDom, videoDom) {
 function progressBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.rel-ebb-progress-bar .setted').css('width', percent + '%');
     $(videoBoxDom).find('.rel-ebb-progress-bar .rest').css('width', (100 - percent) + '%');
-    $(videoBoxDom).find('.rel-ebb-progress-bar .btn').css('left', `calc(${percent}% - 6px)`);
+    $(videoBoxDom).find('.rel-ebb-progress-bar .rel-ebb-btn').css('left', `calc(${percent}% - 6px)`);
 }
 
 /**
@@ -218,7 +218,7 @@ function progressBar(videoBoxDom, percent) {
 function voiceBar(videoBoxDom, percent) {
     $(videoBoxDom).find('.voice-panel .seted').css('height', percent + '%');
     $(videoBoxDom).find('.voice-panel .rest').css('height', (100 - percent) + '%');
-    $(videoBoxDom).find('.voice-panel .btn').css('bottom', `calc(${percent}% - 6px)`);
+    $(videoBoxDom).find('.voice-panel .rel-ebb-btn').css('bottom', `calc(${percent}% - 6px)`);
     $(videoBoxDom).find('.voice-panel .number').html(percent);
     if (percent === 0) {
         // 设置灰色按钮
@@ -291,7 +291,7 @@ function fullScreen(videoBoxDom) {
  * @param videoBoxDom
  */
 function voiceControlEvent(videoBoxDom) {
-    $(videoBoxDom).find(".voice-panel .total .btn").mousedown(function (e) {
+    $(videoBoxDom).find(".voice-panel .total .rel-ebb-btn").mousedown(function (e) {
         let currentDom = e.currentTarget;
         $(document).bind("mousemove", (e) => {
             voiceControl(e, currentDom);
@@ -369,7 +369,7 @@ function clickMute(videoBoxDom) {
  * @param videoBoxDom
  */
 function progressBarEvent(videoBoxDom) {
-    let progressBtnDom = $(videoBoxDom).find('.rel-ebb-progress-bar .btn');
+    let progressBtnDom = $(videoBoxDom).find('.rel-ebb-progress-bar .rel-ebb-btn');
     progressBtnDom.mousedown(function (e) {
         let currentDom = e.currentTarget;
         $(document).mousemove((e) => {
